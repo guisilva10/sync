@@ -1,150 +1,123 @@
-"use client";
+import Link from "next/link";
+import { cn } from "../_lib/utils";
 
-import * as React from "react";
-import {
-  BarChart3,
-  CompassIcon,
-  LayoutDashboard,
-  LifeBuoy,
-  Link2Icon,
-  Paintbrush,
-  Plug,
-  Projector,
-  Send,
-} from "lucide-react";
+export type DashboardSidebarGenericProps<T = unknown> = {
+  children: React.ReactNode;
+  className?: string;
+} & T;
 
-import { NavMain } from "@/app/_components/nav-main";
-import { NavProjects } from "@/app/_components/nav-projects";
-import { NavSecondary } from "@/app/_components/nav-secondary";
+export function DashboardSidebar({
+  className,
+  children,
+}: DashboardSidebarGenericProps) {
+  return (
+    <aside
+      className={cn([
+        "border-border bg-secondary/20 flex flex-col space-y-6 border-r",
+        className,
+      ])}
+    >
+      {children}
+    </aside>
+  );
+}
 
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/app/_components/ui/sidebar";
-import { NavUser } from "./nav-user";
+export function DashboardSidebarHeader({
+  className,
+  children,
+}: DashboardSidebarGenericProps) {
+  return (
+    <header
+      className={cn(["border-border flex h-16 items-center px-6", className])}
+    >
+      {children}
+    </header>
+  );
+}
 
-const data = {
-  navMain: [
-    {
-      title: "Dashboard",
+export function DashboardSidebarHeaderTitle({
+  className,
+  children,
+}: DashboardSidebarGenericProps) {
+  return <h2 className={cn(["", className])}>{children}</h2>;
+}
 
-      icon: LayoutDashboard,
-      isActive: true,
-      items: [
-        {
-          title: "Home",
-          url: "/app",
-        },
-      ],
-    },
-    {
-      title: "Links",
-      url: "#",
-      icon: Link2Icon,
-      items: [
-        {
-          title: "Meus Links",
-          url: "#",
-        },
-        {
-          title: "Adicionar Link",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Aparência",
+export function DashboardSidebarMain({
+  className,
+  children,
+}: DashboardSidebarGenericProps) {
+  return <main className={cn(["", className])}>{children}</main>;
+}
 
-      icon: Paintbrush,
-      items: [
-        {
-          title: "Temas",
-          url: "#",
-        },
-        {
-          title: "Personalizar",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Analytics",
-      url: "#",
-      icon: BarChart3,
-    },
-    {
-      title: "Integrações",
+export function DashboardSidebarNav({
+  className,
+  children,
+}: DashboardSidebarGenericProps) {
+  return <nav className={cn(["px-3", className])}>{children}</nav>;
+}
 
-      icon: Plug,
-      items: [
-        {
-          title: "Google Analytics",
-          url: "#",
-        },
-        {
-          title: "Meta Pixel",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Support",
-      url: "#",
-      icon: LifeBuoy,
-    },
-    {
-      title: "Feedback",
-      url: "#",
-      icon: Send,
-    },
-  ],
-  project: [
-    {
-      name: "Link-1",
-      url: "#",
-      icon: Projector,
-    },
-  ],
+export function DashboardSidebarNavHeader({
+  className,
+  children,
+}: DashboardSidebarGenericProps) {
+  return <header className={cn(["", className])}>{children}</header>;
+}
+
+export function DashboardSidebarNavHeaderTitle({
+  className,
+  children,
+}: DashboardSidebarGenericProps) {
+  return (
+    <div
+      className={cn([
+        "text-muted-foreground ml-3 text-[0.6rem] uppercase",
+        className,
+      ])}
+    >
+      {children}
+    </div>
+  );
+}
+
+export function DashboardSidebarNavMain({
+  className,
+  children,
+}: DashboardSidebarGenericProps) {
+  return <main className={cn(["flex flex-col", className])}>{children}</main>;
+}
+
+type DashboardSidebarNavLinkProps = {
+  href: string;
+  active?: boolean;
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function DashboardSidebarNavLink({
+  className,
+  children,
+  href,
+  active,
+}: DashboardSidebarGenericProps<DashboardSidebarNavLinkProps>) {
   return (
-    <Sidebar
-      className="top-(--header-height) h-[calc(100svh-var(--header-height))]!"
-      {...props}
+    <Link
+      href={href}
+      className={cn([
+        "flex items-center rounded-md px-3 py-2 text-xs",
+        active && "bg-primary text-white",
+        className,
+      ])}
     >
-      <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
-              <div>
-                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <CompassIcon className="size-4" />
-                </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">SYNC</span>
-                  <span className="truncate text-xs">Enterprise</span>
-                </div>
-              </div>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarHeader>
-      <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavProjects projects={data.project} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
-      </SidebarContent>
-      <SidebarFooter>
-        <NavUser />
-      </SidebarFooter>
-    </Sidebar>
+      {children}
+    </Link>
+  );
+}
+
+export function DashboardSidebarFooter({
+  className,
+  children,
+}: DashboardSidebarGenericProps) {
+  return (
+    <footer className={cn(["border-border border-t p-2", className])}>
+      {children}
+    </footer>
   );
 }

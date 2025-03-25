@@ -29,11 +29,16 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/app/_components/ui/sidebar";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
+import { Session } from "next-auth";
 
-export function NavUser() {
+type UserDropdownProps = {
+  user: Session["user"] | undefined;
+};
+
+export function NavUser({ user }: UserDropdownProps) {
   const { isMobile } = useSidebar();
-  const session = useSession();
+  if (!user) return;
 
   return (
     <SidebarMenu>
@@ -46,18 +51,14 @@ export function NavUser() {
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage
-                  src={session.data?.user.image as string}
-                  alt={session.data?.user.name as string}
+                  src={user.image as string}
+                  alt={user.name as string}
                 />
                 <AvatarFallback className="rounded-lg">U</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">
-                  {session.data?.user.name}
-                </span>
-                <span className="truncate text-xs">
-                  {session.data?.user.email}
-                </span>
+                <span className="truncate font-medium">{user.name}</span>
+                <span className="truncate text-xs">{user.email}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -72,18 +73,14 @@ export function NavUser() {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage
-                    src={session.data?.user.image as string}
-                    alt={session.data?.user.name as string}
+                    src={user.image as string}
+                    alt={user.name as string}
                   />
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">
-                    {session.data?.user.name}
-                  </span>
-                  <span className="truncate text-xs">
-                    {session.data?.user.email}
-                  </span>
+                  <span className="truncate font-medium">{user.name}</span>
+                  <span className="truncate text-xs">{user.email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
