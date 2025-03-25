@@ -45,7 +45,7 @@ export function NavMain({
                 tooltip={item.title}
                 className={
                   item.isActive
-                    ? "bg-muted hover:bg-primary/20 text-white hover:text-white"
+                    ? "dark:bg-muted bg-muted-foreground/20 hover:bg-muted-foreground/30 dark:hover:bg-primary/20 dark:text-white"
                     : ""
                 }
               >
@@ -61,7 +61,7 @@ export function NavMain({
                       <ChevronRight
                         className={
                           item.isActive
-                            ? "hover:text-primary size-4 text-white hover:bg-transparent"
+                            ? "hover:text-primary size-4 text-black hover:bg-transparent dark:text-white"
                             : ""
                         }
                       />
