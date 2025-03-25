@@ -13,6 +13,7 @@ import {
 import { Button } from "@/app/_components/ui/button";
 import { Separator } from "@/app/_components/ui/separator";
 import { useSidebar } from "@/app/_components/ui/sidebar";
+import ToggleMenu from "./toggle-menu";
 
 export function SiteHeader() {
   const { toggleSidebar } = useSidebar();
@@ -40,6 +41,7 @@ export function SiteHeader() {
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
+        <ToggleMenu />
       </div>
     </header>
   );

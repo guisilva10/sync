@@ -58,7 +58,13 @@ export function NavMain({
                 <>
                   <CollapsibleTrigger asChild>
                     <SidebarMenuAction className="data-[state=open]:rotate-90">
-                      <ChevronRight className="hover:text-primary size-4 text-white" />
+                      <ChevronRight
+                        className={
+                          item.isActive
+                            ? "hover:text-primary size-4 text-white"
+                            : ""
+                        }
+                      />
                       <span className="sr-only">Toggle</span>
                     </SidebarMenuAction>
                   </CollapsibleTrigger>

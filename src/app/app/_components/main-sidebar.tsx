@@ -133,7 +133,9 @@ export function MainSidebar({ user }: MainSidebarProps) {
                   </div>
                   <div className="grid flex-1 text-left text-sm leading-tight">
                     <span className="truncate font-medium">SYNC</span>
-                    <span className="truncate text-xs">Enterprise</span>
+                    <span className="text-muted-foreground truncate text-xs">
+                      Enterprise
+                    </span>
                   </div>
                 </div>
               </SidebarMenuButton>
