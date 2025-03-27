@@ -14,7 +14,6 @@ import {
 
 import { PencilRulerIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { Button } from "@/app/_components/ui/button";
-import UserProgress from "@/app/_components/user-progress";
 
 import Link from "next/link";
 import { getLinksByUser } from "../../actions";
@@ -25,9 +24,9 @@ export default async function Page() {
   return (
     <DashboardPage>
       <DashboardPageHeader>
-        <DashboardPageHeaderTitle>Visão geral</DashboardPageHeaderTitle>
+        <DashboardPageHeaderTitle>Meus Links</DashboardPageHeaderTitle>
         <DashboardPageHeaderNav>
-          <Button variant="outline" asChild>
+          <Button asChild>
             <Link
               href="/app/links/new"
               className="flex items-center justify-center"
@@ -40,13 +39,6 @@ export default async function Page() {
       </DashboardPageHeader>
       <DashboardPageMain className="py-12">
         <div className="space-y-6">
-          {/* Progresso de Links */}
-          <Card>
-            <CardContent className="pt-6">
-              <UserProgress />
-            </CardContent>
-          </Card>
-
           {/* Lista de Links */}
           <Card>
             <CardHeader>

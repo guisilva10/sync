@@ -18,26 +18,27 @@ import {
   Trash2Icon,
   LinkIcon,
   ChartBarIcon,
+  CreditCard,
 } from "lucide-react";
 import { Button } from "@/app/_components/ui/button";
-import UserProgress from "@/app/_components/user-progress";
 import { getLinksByUser } from "../actions";
 import Link from "next/link";
+import { auth } from "@/services/auth";
+import { getUserCurrentPlan } from "@/services/stripe";
 
 export default async function Page() {
   const links = await getLinksByUser();
+  const session = await auth();
+  const plan = await getUserCurrentPlan(session?.user.id as string);
 
-  // Calcular estatísticas básicas
   const totalLinks = links.length;
 
   return (
     <DashboardPage>
       <DashboardPageHeader>
-        <DashboardPageHeaderTitle>
-          Visão Geral de Links
-        </DashboardPageHeaderTitle>
+        <DashboardPageHeaderTitle>Visão Geral</DashboardPageHeaderTitle>
         <DashboardPageHeaderNav>
-          <Button variant="outline" asChild>
+          <Button asChild>
             <Link
               href="/app/links/new"
               className="flex items-center justify-center gap-2"
@@ -48,17 +49,10 @@ export default async function Page() {
           </Button>
         </DashboardPageHeaderNav>
       </DashboardPageHeader>
-      <DashboardPageMain className="py-12">
+      <DashboardPageMain className="py-6">
         <div className="space-y-6">
-          {/* Progresso de Links */}
-          <Card>
-            <CardContent className="pt-6">
-              <UserProgress />
-            </CardContent>
-          </Card>
-
           {/* Estatísticas de Links */}
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
@@ -86,6 +80,23 @@ export default async function Page() {
                 </div>
                 <p className="text-muted-foreground text-xs">
                   Progresso de criação de links
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">
+                  Uso do Plano atual
+                </CardTitle>
+                <CreditCard className="text-muted-foreground h-4 w-4" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">
+                  {plan.quota.LINKS.usage}%
+                </div>
+                <p className="text-muted-foreground text-xs">
+                  seu plano atual é{" "}
+                  <span className="text-white uppercase">{plan.name}</span>
                 </p>
               </CardContent>
             </Card>

@@ -9,7 +9,11 @@ export function DashboardPage({
   className,
   children,
 }: DashboardPageGenericProps) {
-  return <section className={cn(["h-screen", className])}>{children}</section>;
+  return (
+    <section className={cn(["h-screen overflow-y-auto", className])}>
+      {children}
+    </section>
+  );
 }
 
 export function DashboardPageHeader({

@@ -2,7 +2,6 @@
 
 import {
   BadgeCheck,
-  Bell,
   ChevronsUpDown,
   CreditCard,
   LogOut,
@@ -31,6 +30,7 @@ import {
 } from "@/app/_components/ui/sidebar";
 import { signOut } from "next-auth/react";
 import { Session } from "next-auth";
+import Link from "next/link";
 
 type UserDropdownProps = {
   user: Session["user"] | undefined;
@@ -98,12 +98,10 @@ export function NavUser({ user }: UserDropdownProps) {
                 Account
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
+                <Link className="flex items-center" href="/app/billing">
+                  <CreditCard className="mr-2" />
+                  Billing
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
