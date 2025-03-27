@@ -31,7 +31,6 @@ model Links {
     id            String          @id @default(uuid())
     title  String?
     description String?
-    path  String
     userId String
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

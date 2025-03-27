@@ -50,16 +50,16 @@ export function MainSidebar({ user }: MainSidebarProps) {
       },
       {
         title: "Links",
-        url: "#",
+        url: "/app/links",
         icon: Link2Icon,
         items: [
           {
             title: "Meus Links",
-            url: "#",
+            url: "/app/links",
           },
           {
             title: "Adicionar Link",
-            url: "#",
+            url: "/app/links/new",
           },
         ],
       },
