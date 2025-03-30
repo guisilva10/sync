@@ -11,12 +11,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/app/_components/ui/card";
-
-import { PencilRulerIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { Button } from "@/app/_components/ui/button";
-
+import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { getLinksByUser } from "../../actions";
+import { LinkItem } from "./_components/link-item"; // Importe o novo componente
 
 export default async function Page() {
   const links = await getLinksByUser();
@@ -39,7 +38,6 @@ export default async function Page() {
       </DashboardPageHeader>
       <DashboardPageMain className="py-12">
         <div className="space-y-6">
-          {/* Lista de Links */}
           <Card>
             <CardHeader>
               <CardTitle>Seus Links Criados</CardTitle>
@@ -52,22 +50,14 @@ export default async function Page() {
               ) : (
                 <div className="space-y-4">
                   {links.map((link) => (
-                    <div
+                    <LinkItem
                       key={link.id}
-                      className="flex items-center justify-between border-b pb-2 last:border-b-0"
-                    >
-                      <div>
-                        <p className="font-medium">{link.title}</p>
-                      </div>
-                      <div className="flex space-x-2">
-                        <Button variant="ghost" size="sm">
-                          <PencilRulerIcon />
-                        </Button>
-                        <Button size="sm">
-                          <Trash2Icon />
-                        </Button>
-                      </div>
-                    </div>
+                      id={link.id as string}
+                      title={link.title || ""}
+                      slug={link.slug}
+                      description={link.description}
+                      socialLinksJson={link.socialLinksJson}
+                    />
                   ))}
                 </div>
               )}

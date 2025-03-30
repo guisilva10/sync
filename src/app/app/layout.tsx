@@ -4,7 +4,6 @@ import { auth } from "@/services/auth";
 import { MainSidebar } from "./_components/main-sidebar";
 import { SidebarInset, SidebarProvider } from "../_components/ui/sidebar";
 import { SiteHeader } from "../_components/site-header";
-import UserProgress from "../_components/user-progress";
 
 export default async function Layout({ children }: PropsWithChildren) {
   const session = await auth();
@@ -12,7 +11,6 @@ export default async function Layout({ children }: PropsWithChildren) {
   return (
     <div className="[--header-height:calc(--spacing(14))]">
       <SidebarProvider className="flex flex-col">
-        <UserProgress />
         <SiteHeader />
         <div className="flex flex-1">
           <MainSidebar user={session?.user} />

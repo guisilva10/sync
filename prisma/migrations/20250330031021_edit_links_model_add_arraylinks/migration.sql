@@ -1,0 +1,9 @@
+/*
+  Warnings:
+
+  - The `socialLinksJson` column on the `Links` table would be dropped and recreated. This will lead to data loss if there is data in the column.
+
+*/
+-- AlterTable
+ALTER TABLE "Links" DROP COLUMN "socialLinksJson",
+ADD COLUMN     "socialLinksJson" TEXT[];

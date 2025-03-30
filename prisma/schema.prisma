@@ -28,13 +28,16 @@ model User {
 
 
 model Links {
-    id            String          @id @default(uuid())
-    title  String?
-    description String?
-    userId String
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id              String    @id @default(uuid())
+  title           String?   
+  slug            String?  @unique
+  description     String?
+  socialLinksJson String[]  
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 }
-
 model Account {
   userId            String
   type              String

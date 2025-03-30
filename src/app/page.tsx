@@ -45,19 +45,19 @@ export default function LandingPage() {
   return (
     <div className="flex min-h-[100dvh] flex-col">
       <header
-        className={`sticky top-0 z-50 w-full backdrop-blur-lg px-6 transition-all duration-300 ${
+        className={`sticky top-0 z-50 w-full px-6 backdrop-blur-lg transition-all duration-300 ${
           isScrolled ? "bg-background/80 shadow-sm" : "bg-transparent"
         }`}
       >
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center gap-2 font-bold">
-            <div className="size-8 rounded-lg bg-gradient-to-r from-primary to-primary/70 flex items-center justify-center text-white">
+            <div className="from-primary to-primary/70 flex size-8 items-center justify-center rounded-lg bg-gradient-to-r text-white">
               <CompassIcon className="size-4 text-white" />
             </div>
             <span>Sync</span>
           </div>
 
-          <div className="hidden md:flex gap-4 items-center">
+          <div className="hidden items-center gap-4 md:flex">
             <Button
               variant="ghost"
               size="icon"
@@ -111,10 +111,10 @@ export default function LandingPage() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="md:hidden absolute top-16 inset-x-0 bg-background/95 backdrop-blur-lg border-b"
+            className="bg-background/95 absolute inset-x-0 top-16 border-b backdrop-blur-lg md:hidden"
           >
-            <div className=" py-4 flex flex-col gap-4">
-              <div className="flex flex-col gap-2 pt-2 border-t">
+            <div className="flex flex-col gap-4 py-4">
+              <div className="flex flex-col gap-2 border-t pt-2">
                 <Button className="rounded-full">
                   Comece Agora
                   <ChevronRight className="ml-1 size-4" />
@@ -124,36 +124,29 @@ export default function LandingPage() {
           </motion.div>
         )}
       </header>
-      <main className="lg:max-w-screen w-full relative">
-        <div
-          className="absolute inset-0 -z-10 h-screen w-full bg-background 
-  bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] 
-  dark:bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)] 
-  bg-[size:4rem_4rem] 
-  [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)] 
-  after:absolute after:inset-0 after:bg-[#7637E2] after:opacity-20 after:blur-3xl animate-pulse duration-1000 transition-all"
-        />
-        <section className="w-full overflow-hidden h-screen z-10 flex items-center justify-center">
+      <main className="relative w-full lg:max-w-screen">
+        <div className="bg-background absolute inset-0 -z-10 h-screen w-full animate-pulse bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:4rem_4rem] transition-all duration-1000 [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)] after:absolute after:inset-0 after:bg-[#9f1239] after:opacity-20 after:blur-3xl dark:bg-[linear-gradient(to_right,#1f1f1f_1px,transparent_1px),linear-gradient(to_bottom,#1f1f1f_1px,transparent_1px)]" />
+        <section className="z-10 flex h-screen w-full items-center justify-center overflow-hidden">
           <div className="relative px-6 lg:px-0">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="text-center max-w-5xl mx-auto"
+              className="mx-auto max-w-5xl text-center"
             >
-              <h1 className="text-4xl lg:text-8xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
+              <h1 className="from-foreground to-foreground/70 mb-6 bg-gradient-to-r bg-clip-text text-4xl font-bold tracking-tight text-transparent lg:text-8xl">
                 Crie Seu Link In Bio Personalizado com a{" "}
                 <span className="text-primary font-bold">SYNC</span>
               </h1>
-              <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+              <p className="text-muted-foreground mx-auto mb-8 max-w-2xl text-lg">
                 Aumente sua visibilidade online com um link in bio
                 personalizado.A SYNC é a solução perfeita para você.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col justify-center gap-4 sm:flex-row">
                 <Button
                   size="lg"
                   asChild
-                  className="rounded-full h-12 px-8 text-base"
+                  className="h-12 rounded-full px-8 text-base"
                 >
                   <Link href="/auth/sign-in" className="flex items-center">
                     Criar meu Link in Bio
@@ -163,22 +156,22 @@ export default function LandingPage() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="rounded-full h-12 px-8 text-base"
+                  className="h-12 rounded-full px-8 text-base"
                 >
                   Saiba Mais
                 </Button>
               </div>
-              <div className="flex items-center justify-center gap-4 mt-6 text-sm text-muted-foreground">
+              <div className="text-muted-foreground mt-6 flex items-center justify-center gap-4 text-sm">
                 <div className="flex items-center gap-1">
-                  <Check className="size-4 text-primary" />
+                  <Check className="text-primary size-4" />
                   <span>personalização livre</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <Check className="size-4 text-primary" />
+                  <Check className="text-primary size-4" />
                   <span>integração com redes sociais</span>
                 </div>
                 <div className="flex items-center gap-1">
-                  <Check className="size-4 text-primary" />
+                  <Check className="text-primary size-4" />
                   <span>layouts modernos</span>
                 </div>
               </div>
