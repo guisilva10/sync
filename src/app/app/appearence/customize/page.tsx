@@ -30,8 +30,8 @@ export default async function Page() {
       <DashboardPageHeader>
         <DashboardPageHeaderTitle>Personalizar Link</DashboardPageHeaderTitle>
       </DashboardPageHeader>
-      <DashboardPageMain className="flex flex-col items-center justify-center gap-8 py-12">
-        <Card className="w-full max-w-lg border shadow-lg transition-all hover:shadow-xl">
+      <DashboardPageMain className="mx-auto flex w-full flex-col items-center justify-center gap-8 py-12">
+        <Card className="w-full border shadow-lg transition-all hover:shadow-xl">
           <CardHeader className="space-y-4 text-center">
             <div className="bg-primary/10 mx-auto flex h-16 w-16 items-center justify-center rounded-full">
               <RocketIcon className="text-primary size-8" />
@@ -45,8 +45,8 @@ export default async function Page() {
               </CardTitle>
             </div>
           </CardHeader>
-          <CardContent className="text-center">
-            <p className="text-muted-foreground text-lg">
+          <CardContent className="w-full text-center">
+            <p className="text-muted-foreground mb-2 text-lg">
               Estamos trabalhando em algo incrível! Esta funcionalidade estará
               disponível em breve para melhorar sua experiência.
             </p>

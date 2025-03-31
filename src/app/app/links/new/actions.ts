@@ -9,8 +9,9 @@ export type LinkFormData = {
   title: string;
   description: string;
   slug: string;
-  socialLinksJson: string[];
+  socialLinksJson: { title: string; url: string }[];
   theme: string;
+  image: string;
 };
 
 const slugify = (text: string): string =>
@@ -36,6 +37,7 @@ export async function saveLink(data: LinkFormData) {
       description: data.description,
       slug: uniqueSlug,
       socialLinksJson: data.socialLinksJson,
+      image: data.image,
       theme: data.theme || "light",
       userId: session.user.id,
     },
@@ -198,6 +200,8 @@ export const getLinkById = async (id: string) => {
       socialLinksJson: true,
       title: true,
       theme: true,
+      image: true,
+      linkClicks: true,
       description: true,
       user: {
         select: {
@@ -224,6 +228,7 @@ export const getLinkBySlug = async (slug: string) => {
         socialLinksJson: true,
         title: true,
         description: true,
+        image: true,
         theme: true,
         user: {
           select: {
@@ -320,3 +325,44 @@ export const updateLinkTheme = async (id: string, theme: string) => {
 
   return updatedLink;
 };
+
+export async function incrementLinkClick(linkId: string, url: string) {
+  try {
+    // Tenta encontrar um registro existente para o linkId e URL
+    const existingClick = await prisma.linkClick.findUnique({
+      where: {
+        linkId_url: {
+          linkId,
+          url,
+        },
+      },
+    });
+
+    if (existingClick) {
+      // Se existir, incrementa o contador
+      await prisma.linkClick.update({
+        where: {
+          id: existingClick.id,
+        },
+        data: {
+          clicks: {
+            increment: 1,
+          },
+          updatedAt: new Date(),
+        },
+      });
+    } else {
+      // Se não existir, cria um novo registro com 1 clique
+      await prisma.linkClick.create({
+        data: {
+          linkId,
+          url,
+          clicks: 1,
+        },
+      });
+    }
+  } catch (error) {
+    console.error("Erro ao registrar clique:", error);
+    throw error;
+  }
+}

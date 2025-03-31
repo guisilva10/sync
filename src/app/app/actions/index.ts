@@ -18,73 +18,13 @@ export const getLinksByUser = async () => {
     where: {
       userId: session?.user.id,
     },
+    include: {
+      linkClicks: true,
+    },
   });
 
   return links;
 };
-
-export async function upsertLink(input: z.infer<typeof linkSchema>) {
-  const session = await auth();
-
-  if (!session?.user?.id) {
-    return {
-      error: "Not authorized",
-      data: null,
-    };
-  }
-
-  if (input.id) {
-    const link = await prisma.links.findUnique({
-      where: {
-        id: input.id,
-        userId: session?.user?.id,
-      },
-      select: {
-        id: true,
-      },
-    });
-
-    if (!link) {
-      return {
-        error: "Not found",
-        data: null,
-      };
-    }
-
-    const updatedLink = await prisma.links.update({
-      where: {
-        id: input.id,
-        userId: session?.user?.id,
-      },
-      data: {
-        title: input.title,
-        description: input.description,
-      },
-    });
-
-    return {
-      error: null,
-      data: updatedLink,
-    };
-  }
-
-  if (!input.title && !input.description) {
-    return {
-      error: "Title is required",
-      data: null,
-    };
-  }
-
-  const link = await prisma.links.create({
-    data: {
-      title: input.title,
-      description: input.description,
-      userId: session?.user?.id,
-    },
-  });
-
-  return link;
-}
 
 export async function deleteLink(input: z.infer<typeof deleteLinkSchema>) {
   const session = await auth();

@@ -26,6 +26,15 @@ export default async function Page() {
 
   const totalLinks = links.length;
 
+  // Calcula o total de cliques somando os cliques de todos os linkClicks
+  const totalClicks = links.reduce((acc, link) => {
+    const linkClicksSum = link.linkClicks.reduce(
+      (sum, click) => sum + click.clicks,
+      0,
+    );
+    return acc + linkClicksSum;
+  }, 0);
+
   return (
     <DashboardPage>
       <DashboardPageHeader>
@@ -45,7 +54,7 @@ export default async function Page() {
       <DashboardPageMain className="py-6">
         <div className="space-y-6">
           {/* Estatísticas de Links */}
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
@@ -73,6 +82,18 @@ export default async function Page() {
                 </div>
                 <p className="text-muted-foreground text-xs">
                   Progresso de criação de links
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Clicks</CardTitle>
+                <ChartBarIcon className="text-muted-foreground h-4 w-4" />
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{totalClicks}</div>
+                <p className="text-muted-foreground text-xs">
+                  Total de cliques em todos os links sociais
                 </p>
               </CardContent>
             </Card>
@@ -114,7 +135,13 @@ export default async function Page() {
                       title={link.title || ""}
                       slug={link.slug}
                       description={link.description}
-                      socialLinksJson={link.socialLinksJson}
+                      socialLinksJson={
+                        Array.isArray(link.socialLinksJson)
+                          ? link.socialLinksJson
+                              .filter((link) => link !== null)
+                              .map((link) => link.toString())
+                          : []
+                      }
                     />
                   ))}
                 </div>

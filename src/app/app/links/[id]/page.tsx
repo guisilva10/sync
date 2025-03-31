@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Card,
   CardContent,
@@ -35,6 +36,7 @@ import {
   DashboardPageHeaderTitle,
   DashboardPageMain,
 } from "@/app/_components/page-dashboard";
+import { supabase } from "@/services/supabase/index"; // Ajuste o caminho para seu arquivo de configuração do Supabase
 
 // Definição dos temas
 const themes = {
@@ -69,7 +71,7 @@ const themes = {
     avatarBg: "bg-blue-600",
   },
   green: {
-    background: "bg-zync-950",
+    background: "bg-zinc-950",
     text: "text-white",
     mutedText: "text-muted-foreground",
     nameBg: "bg-green-700/20",
@@ -100,25 +102,6 @@ const detectPlatform = (url: string): string => {
   return "other";
 };
 
-const generateTitle = (platform: string): string => {
-  switch (platform) {
-    case "instagram":
-      return "Instagram";
-    case "twitter":
-      return "Twitter";
-    case "youtube":
-      return "YouTube";
-    case "facebook":
-      return "Facebook";
-    case "linkedin":
-      return "LinkedIn";
-    case "github":
-      return "GitHub";
-    default:
-      return "Link";
-  }
-};
-
 export default async function Page({
   params,
 }: {
@@ -143,9 +126,22 @@ export default async function Page({
     );
   }
 
-  const socialLinks = data.socialLinksJson || [];
+  // Ajuste para lidar com socialLinksJson como array de objetos
+  const socialLinks: { title: string; url: string }[] = Array.isArray(
+    data.socialLinksJson,
+  )
+    ? data.socialLinksJson.filter(Boolean).map((link: any) => ({
+        title: link.title,
+        url: link.url,
+      }))
+    : [];
   const theme = data.theme || "light";
   const themeStyles = themes[theme as keyof typeof themes];
+
+  // Obtém a URL pública da imagem do Supabase, se existir
+  const imageUrl = data.image
+    ? supabase.storage.from("images").getPublicUrl(data.image).data.publicUrl
+    : null;
 
   return (
     <DashboardPage>
@@ -213,16 +209,26 @@ export default async function Page({
                   className={`absolute -inset-1 rounded-full bg-gradient-to-r from-${themeStyles.avatarBg} to-${themeStyles.avatarBg} opacity-70 blur`}
                 ></div>
                 <Avatar className="border-primary/20 relative h-32 w-32 border shadow-sm">
-                  <AvatarImage
-                    src={data.user.image as string}
-                    alt={data.user.name as string}
-                    className="object-cover"
-                  />
-                  <AvatarFallback
-                    className={`${themeStyles.avatarBg} text-3xl ${themeStyles.buttonText}`}
-                  >
-                    {data.user.name?.charAt(0).toUpperCase() ?? "U"}
-                  </AvatarFallback>
+                  {imageUrl ? (
+                    <AvatarImage
+                      src={imageUrl}
+                      alt={data.title || "Imagem do link"}
+                      className="h-full w-full object-cover object-center"
+                    />
+                  ) : (
+                    <>
+                      <AvatarImage
+                        src={data.user.image as string}
+                        alt={data.user.name as string}
+                        className="object-cover"
+                      />
+                      <AvatarFallback
+                        className={`${themeStyles.avatarBg} text-3xl ${themeStyles.buttonText}`}
+                      >
+                        {data.user.name?.charAt(0).toUpperCase() ?? "U"}
+                      </AvatarFallback>
+                    </>
+                  )}
                 </Avatar>
               </div>
             </div>
@@ -251,20 +257,27 @@ export default async function Page({
 
             <div className="space-y-3">
               {socialLinks.length > 0 ? (
-                socialLinks.map((url: string, index: number) => {
-                  const platform = detectPlatform(url);
+                socialLinks.map((link, index) => {
+                  const platform = detectPlatform(link.url);
                   const { icon } =
                     platformIcons[platform] || platformIcons.other;
-                  const title = generateTitle(platform);
+                  const clickCount =
+                    data.linkClicks.find((click) => click.url === link.url)
+                      ?.clicks || 0;
 
                   return (
                     <div key={index} className="group relative">
+                      <p
+                        className={`text-xs ${themeStyles.mutedText} mb-1 text-end`}
+                      >
+                        Cliques: {clickCount}
+                      </p>
                       <Button
                         variant="bio"
                         className={`h-12 w-full rounded-xl shadow-md transition-all duration-300 ${themeStyles.buttonBg} ${themeStyles.buttonText}`}
                       >
                         <Link
-                          href={url}
+                          href={link.url}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex items-center gap-3 py-6"
@@ -272,7 +285,7 @@ export default async function Page({
                           <span className="flex items-center justify-center">
                             {icon}
                           </span>
-                          <span className="font-medium">{title}</span>
+                          <span className="font-medium">{link.title}</span>
                         </Link>
                       </Button>
                     </div>

@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @next/next/no-img-element */
 
 "use client";
 
@@ -59,6 +59,10 @@ import { useToast } from "@/app/_components/ui/use-toast";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { RadioGroup, RadioGroupItem } from "@/app/_components/ui/radio-group";
+// Ajuste o caminho
+import { useSession } from "next-auth/react"; // Importação do NextAuth
+import { uploadImage } from "@/services/supabase/actions";
+import Loading from "./loading";
 
 type SocialLink = {
   id: number;
@@ -134,7 +138,7 @@ const themes = [
     value: "green",
     label: "Verde",
     styles: {
-      background: "bg-zync-950",
+      background: "bg-zinc-950",
       text: "text-white",
       mutedText: "text-muted-foreground",
       nameBg: "bg-green-700/20",
@@ -148,12 +152,14 @@ const themes = [
 
 export default function LinkInBioPage() {
   const router = useRouter();
+  const { data: session, status } = useSession(); // Hook do NextAuth para pegar a sessão
   const initialLinkData = {
     title: "",
     description: "",
     slug: "",
     socialLinksJson: [],
     theme: "light",
+    image: "",
   };
 
   const initialSocialLinks = [
@@ -167,8 +173,21 @@ export default function LinkInBioPage() {
     [key: string]: string;
   }>({});
   const [isLoading, setIsLoading] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   const { toast } = useToast();
+
+  // Verifica se o usuário está autenticado
+  if (status === "loading") {
+    return <Loading />;
+  }
+
+  if (status === "unauthenticated") {
+    router.push("/api/auth/signin"); // Redireciona para login se não estiver autenticado
+    return null;
+  }
+
+  const userId = session?.user?.id; // Pega o userId da sessão do NextAuth
 
   const validateData = () => {
     const errors: { [key: string]: string } = {};
@@ -192,11 +211,28 @@ export default function LinkInBioPage() {
     return Object.keys(errors).length === 0;
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setImageFile(e.target.files[0]);
+    }
+  };
+
   const saveData = async () => {
     if (validateData()) {
       setIsLoading(true);
       try {
-        const socialLinksArray = socialLinks.map((link) => link.url);
+        let imagePath = linkData.image;
+        if (imageFile && userId) {
+          const uploadedImagePath = await uploadImage(imageFile, userId);
+          if (!uploadedImagePath)
+            throw new Error("Falha ao fazer upload da imagem");
+          imagePath = uploadedImagePath;
+        }
+
+        const socialLinksArray = socialLinks.map((link) => ({
+          title: link.title,
+          url: link.url,
+        }));
 
         const formData: LinkFormData = {
           title: linkData.title,
@@ -204,6 +240,7 @@ export default function LinkInBioPage() {
           description: linkData.description,
           socialLinksJson: socialLinksArray,
           theme: linkData.theme,
+          image: imagePath,
         };
 
         await saveLink(formData);
@@ -215,6 +252,7 @@ export default function LinkInBioPage() {
 
         setLinkData(initialLinkData);
         setSocialLinks(initialSocialLinks);
+        setImageFile(null);
         setValidationErrors({});
         router.push("/app/links");
       } catch (error) {
@@ -231,7 +269,7 @@ export default function LinkInBioPage() {
   };
 
   const updateLinkData = (
-    field: "title" | "description" | "slug" | "theme",
+    field: "title" | "description" | "slug" | "theme" | "image",
     value: string,
   ) => {
     setLinkData((prev) => ({ ...prev, [field]: value }));
@@ -311,6 +349,21 @@ export default function LinkInBioPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="image">Imagem do Link (opcional)</Label>
+                  <Input
+                    id="image"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                  />
+                  {imageFile && (
+                    <p className="text-muted-foreground text-sm">
+                      Imagem selecionada: {imageFile.name}
+                    </p>
+                  )}
+                </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="main-title">
                     Título Principal
@@ -403,7 +456,7 @@ export default function LinkInBioPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                {socialLinks.map((link, index) => (
+                {socialLinks.map((link) => (
                   <Card key={link.id} className="border-muted border">
                     <CardHeader className="flex flex-row items-start justify-between p-4 pb-2">
                       <div className="flex items-center gap-2">
@@ -511,7 +564,7 @@ export default function LinkInBioPage() {
                 <Button
                   onClick={saveData}
                   className="flex items-center gap-2"
-                  disabled={isLoading}
+                  disabled={isLoading || !userId}
                 >
                   {isLoading ? (
                     <>
@@ -546,11 +599,19 @@ export default function LinkInBioPage() {
                   className={`mx-auto max-w-md overflow-hidden rounded-lg border border-gray-200 shadow-md ${selectedTheme.styles.background} ${selectedTheme.styles.text}`}
                 >
                   <div className="px-6 py-8 text-center">
-                    <div
-                      className={`${selectedTheme.styles.avatarBg} mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full ${selectedTheme.styles.buttonText}`}
-                    >
-                      S
-                    </div>
+                    {imageFile ? (
+                      <img
+                        src={URL.createObjectURL(imageFile)}
+                        alt="Prévia da imagem"
+                        className="mx-auto mb-4 h-24 w-24 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div
+                        className={`${selectedTheme.styles.avatarBg} mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full ${selectedTheme.styles.buttonText}`}
+                      >
+                        {linkData.title.charAt(0).toUpperCase() || "S"}
+                      </div>
+                    )}
                     <h2
                       className={`mb-2 text-xl font-bold ${selectedTheme.styles.text}`}
                     >

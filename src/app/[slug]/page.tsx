@@ -1,22 +1,16 @@
-import type { ReactNode } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { Card, CardContent, CardFooter } from "@/app/_components/ui/card";
-import {
-  Instagram,
-  Twitter,
-  Youtube,
-  Facebook,
-  Linkedin,
-  Github,
-  Globe,
-} from "lucide-react";
-import Link from "next/link";
+
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "@/app/_components/ui/avatar";
-import { Button } from "@/app/_components/ui/button";
 import { getLinkBySlug } from "../app/links/new/actions";
+import { supabase } from "@/services/supabase";
+import { SocialLinksClient } from "./_components/social-link-conent";
+// Novo componente cliente
 
 // Definição dos temas
 const themes = {
@@ -51,7 +45,7 @@ const themes = {
     avatarBg: "bg-blue-600",
   },
   green: {
-    background: "bg-zync-950",
+    background: "bg-zinc-950",
     text: "text-white",
     mutedText: "text-muted-foreground",
     nameBg: "bg-green-700/20",
@@ -60,44 +54,6 @@ const themes = {
     buttonText: "text-white",
     avatarBg: "bg-green-600",
   },
-};
-const platformStyles: Record<string, { icon: ReactNode }> = {
-  instagram: { icon: <Instagram className="h-5 w-5" /> },
-  twitter: { icon: <Twitter className="h-5 w-5" /> },
-  youtube: { icon: <Youtube className="h-5 w-5" /> },
-  facebook: { icon: <Facebook className="h-5 w-5" /> },
-  linkedin: { icon: <Linkedin className="h-5 w-5" /> },
-  github: { icon: <Github className="h-5 w-5" /> },
-  other: { icon: <Globe className="h-5 w-5" /> },
-};
-
-const detectPlatform = (url: string): string => {
-  if (url.includes("instagram.com")) return "instagram";
-  if (url.includes("twitter.com") || url.includes("x.com")) return "twitter";
-  if (url.includes("youtube.com") || url.includes("youtu.be")) return "youtube";
-  if (url.includes("facebook.com")) return "facebook";
-  if (url.includes("linkedin.com")) return "linkedin";
-  if (url.includes("github.com")) return "github";
-  return "other";
-};
-
-const generateTitle = (platform: string): string => {
-  switch (platform) {
-    case "instagram":
-      return "Instagram";
-    case "twitter":
-      return "Twitter";
-    case "youtube":
-      return "YouTube";
-    case "facebook":
-      return "Facebook";
-    case "linkedin":
-      return "LinkedIn";
-    case "github":
-      return "GitHub";
-    default:
-      return "Link";
-  }
 };
 
 export default async function Page({
@@ -126,9 +82,21 @@ export default async function Page({
     );
   }
 
-  const socialLinks = linkData.socialLinksJson ?? [];
-  const theme = linkData.theme ?? "light";
+  const socialLinks: { title: string; url: string }[] = Array.isArray(
+    linkData.socialLinksJson,
+  )
+    ? linkData.socialLinksJson.filter(Boolean).map((link: any) => ({
+        title: link.title,
+        url: link.url,
+      }))
+    : [];
+  const theme = linkData.theme || "light";
   const themeStyles = themes[theme as keyof typeof themes];
+
+  const imageUrl = linkData.image
+    ? supabase.storage.from("images").getPublicUrl(linkData.image).data
+        .publicUrl
+    : null;
 
   return (
     <div
@@ -142,16 +110,26 @@ export default async function Page({
             <div className="mb-8 flex justify-center">
               <div className="relative">
                 <Avatar className="border-primary/20 relative h-32 w-32 border shadow-sm">
-                  <AvatarImage
-                    src={linkData.user.image as string}
-                    alt={linkData.user.name as string}
-                    className="object-cover"
-                  />
-                  <AvatarFallback
-                    className={`${themeStyles.avatarBg} text-3xl ${themeStyles.buttonText}`}
-                  >
-                    {linkData.user.name?.charAt(0).toUpperCase() ?? "U"}
-                  </AvatarFallback>
+                  {imageUrl ? (
+                    <AvatarImage
+                      src={imageUrl}
+                      alt={linkData.title || "Imagem do link"}
+                      className="h-full w-full object-cover object-center"
+                    />
+                  ) : (
+                    <>
+                      <AvatarImage
+                        src={linkData.user.image as string}
+                        alt={linkData.user.name as string}
+                        className="object-cover"
+                      />
+                      <AvatarFallback
+                        className={`${themeStyles.avatarBg} text-3xl ${themeStyles.buttonText}`}
+                      >
+                        {linkData.user.name?.charAt(0).toUpperCase() ?? "U"}
+                      </AvatarFallback>
+                    </>
+                  )}
                 </Avatar>
               </div>
             </div>
@@ -179,40 +157,15 @@ export default async function Page({
                 )}
               </div>
 
-              <div className="space-y-4">
-                {socialLinks.length > 0 ? (
-                  socialLinks.map((url: string, urlIndex: number) => {
-                    const platform = detectPlatform(url);
-                    const { icon } =
-                      platformStyles[platform] || platformStyles.other;
-                    const title = generateTitle(platform);
-
-                    return (
-                      <div key={urlIndex} className="group">
-                        <Button
-                          className={`flex h-12 w-full items-center rounded-full border ${themeStyles.buttonBg} ${themeStyles.buttonText}`}
-                          variant="bio"
-                        >
-                          <Link
-                            href={url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex w-full items-center justify-center gap-x-3"
-                          >
-                            <div>{icon}</div>
-                            <span>{title}</span>
-                          </Link>
-                        </Button>
-                      </div>
-                    );
-                  })
-                ) : (
-                  <div className={`text-center ${themeStyles.mutedText}`}>
-                    Nenhum link social disponível para $quot;{linkData.title}
-                    $quot;
-                  </div>
-                )}
-              </div>
+              <SocialLinksClient
+                socialLinks={socialLinks}
+                linkId={linkData.id}
+                themeStyles={{
+                  buttonBg: themeStyles.buttonBg,
+                  buttonText: themeStyles.buttonText,
+                  mutedText: themeStyles.mutedText,
+                }}
+              />
             </div>
           </CardContent>
 

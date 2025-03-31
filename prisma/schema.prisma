@@ -32,12 +32,26 @@ model Links {
   title           String?   
   slug            String?  @unique
   description     String?
-  socialLinksJson String[]  
+  socialLinksJson Json
   theme           String?
+  image           String?
+  linkClicks      LinkClick[]
   userId          String
   user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
+}
+
+model LinkClick {
+  id        String   @id @default(uuid())
+  linkId    String
+  url       String   // URL do link social
+  clicks    Int      @default(0) // Contador de cliques
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  link      Links    @relation(fields: [linkId], references: [id], onDelete: Cascade)
+
+  @@unique([linkId, url]) // Garante que cada URL tenha um registro único por link
 }
 model Account {
   userId            String
