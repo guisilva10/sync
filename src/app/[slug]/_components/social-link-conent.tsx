@@ -51,6 +51,9 @@ async function handleClick(linkId: string, url: string) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ linkId, url }),
+      next: {
+        tags: ["clicks"],
+      },
     });
 
     const data = await response.json();

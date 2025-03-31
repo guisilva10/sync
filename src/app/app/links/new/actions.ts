@@ -2,7 +2,7 @@
 
 import { auth } from "@/services/auth";
 import { prisma } from "@/services/database";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 // Ajuste para sua implementação de autenticação
 
 export type LinkFormData = {
@@ -361,6 +361,8 @@ export async function incrementLinkClick(linkId: string, url: string) {
         },
       });
     }
+
+    revalidateTag("clicks");
   } catch (error) {
     console.error("Erro ao registrar clique:", error);
     throw error;
