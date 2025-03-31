@@ -6,7 +6,6 @@ import {
 } from "@/app/_components/app-sidebar";
 
 import {
-  BarChart3,
   CompassIcon,
   LayoutDashboard,
   LifeBuoy,
@@ -72,14 +71,9 @@ export function MainSidebar({ user }: MainSidebarProps) {
           },
           {
             title: "Personalizar",
-            url: "#",
+            url: "/app/appearence/customize",
           },
         ],
-      },
-      {
-        title: "Analytics",
-        url: "#",
-        icon: BarChart3,
       },
     ],
     navSecondary: [
