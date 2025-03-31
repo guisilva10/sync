@@ -23,7 +23,6 @@ import {
   AvatarImage,
 } from "@/app/_components/ui/avatar";
 import { Button } from "@/app/_components/ui/button";
-
 import {
   Tooltip,
   TooltipContent,
@@ -37,28 +36,58 @@ import {
   DashboardPageMain,
 } from "@/app/_components/page-dashboard";
 
+// Definição dos temas
+const themes = {
+  light: {
+    background: "bg-white",
+    text: "text-black",
+    mutedText: "text-muted-foreground",
+    buttonBg: "bg-primary",
+    nameBg: "bg-primary/20",
+    nameText: "text-primary",
+    buttonText: "text-white",
+    avatarBg: "bg-primary",
+  },
+  dark: {
+    background: "bg-zinc-950",
+    text: "text-white",
+    mutedText: "text-muted-foreground",
+    buttonBg: "bg-primary",
+    nameBg: "bg-primary/20",
+    nameText: "text-primary",
+    buttonText: "text-white",
+    avatarBg: "bg-primary",
+  },
+  blue: {
+    background: "bg-zinc-950",
+    text: "text-white",
+    mutedText: "text-muted-foreground",
+    nameBg: "bg-blue-700/20",
+    nameText: "text-blue-500",
+    buttonBg: "bg-blue-700",
+    buttonText: "text-white",
+    avatarBg: "bg-blue-600",
+  },
+  green: {
+    background: "bg-zync-950",
+    text: "text-white",
+    mutedText: "text-muted-foreground",
+    nameBg: "bg-green-700/20",
+    nameText: "text-green-500",
+    buttonBg: "bg-green-700",
+    buttonText: "text-white",
+    avatarBg: "bg-green-600",
+  },
+};
+
 const platformIcons: Record<string, { icon: React.ReactNode }> = {
-  instagram: {
-    icon: <Instagram className="h-5 w-5" />,
-  },
-  twitter: {
-    icon: <Twitter className="h-5 w-5" />,
-  },
-  youtube: {
-    icon: <Youtube className="h-5 w-5" />,
-  },
-  facebook: {
-    icon: <Facebook className="h-5 w-5" />,
-  },
-  linkedin: {
-    icon: <Linkedin className="h-5 w-5" />,
-  },
-  github: {
-    icon: <Github className="h-5 w-5" />,
-  },
-  other: {
-    icon: <Globe className="h-5 w-5" />,
-  },
+  instagram: { icon: <Instagram className="h-5 w-5" /> },
+  twitter: { icon: <Twitter className="h-5 w-5" /> },
+  youtube: { icon: <Youtube className="h-5 w-5" /> },
+  facebook: { icon: <Facebook className="h-5 w-5" /> },
+  linkedin: { icon: <Linkedin className="h-5 w-5" /> },
+  github: { icon: <Github className="h-5 w-5" /> },
+  other: { icon: <Globe className="h-5 w-5" /> },
 };
 
 const detectPlatform = (url: string): string => {
@@ -103,7 +132,7 @@ export default async function Page({
       <div className="flex min-h-screen items-center justify-center">
         <Card className="w-full max-w-md p-8 text-center">
           <h2 className="text-xl font-semibold">Link não encontrado</h2>
-          <p className="text-muted-foreground mt-2">
+          <p className="mt-2 text-gray-600">
             Este link não existe ou foi removido
           </p>
           <Button asChild className="mt-6">
@@ -115,16 +144,20 @@ export default async function Page({
   }
 
   const socialLinks = data.socialLinksJson || [];
+  const theme = data.theme || "light";
+  const themeStyles = themes[theme as keyof typeof themes];
 
   return (
     <DashboardPage>
       <DashboardPageHeader>
-        <DashboardPageHeaderTitle>
+        <DashboardPageHeaderTitle className={themeStyles.text}>
           Visualizando Link: {data.slug}
         </DashboardPageHeaderTitle>
       </DashboardPageHeader>
       <DashboardPageMain className="py-12">
-        <Card className="bg-background/90 border-primary/10 mx-auto w-full shadow-xl backdrop-blur-lg transition-all hover:shadow-2xl lg:max-w-md">
+        <Card
+          className={`bg-background/90 mx-auto w-full shadow-xl backdrop-blur-lg transition-all hover:shadow-2xl lg:max-w-md ${themeStyles.background} ${themeStyles.text}`}
+        >
           <CardHeader className="relative pt-16 pb-0">
             <div className="absolute top-4 left-4 z-10">
               <TooltipProvider>
@@ -137,7 +170,7 @@ export default async function Page({
                       className="rounded-full"
                     >
                       <Link href="/app/links">
-                        <ArrowLeft className="h-4 w-4" />
+                        <ArrowLeft className={`h-4 w-4 ${themeStyles.text}`} />
                         <span className="sr-only">Voltar</span>
                       </Link>
                     </Button>
@@ -160,7 +193,7 @@ export default async function Page({
                       className="rounded-full"
                     >
                       <Link href={`/${data.slug}`}>
-                        <Eye className="h-4 w-4" />
+                        <Eye className={`h-4 w-4 ${themeStyles.text}`} />
                         <span className="sr-only">Visualizar</span>
                       </Link>
                     </Button>
@@ -176,30 +209,41 @@ export default async function Page({
           <CardContent className="px-6 pt-0 pb-6">
             <div className="mb-8 flex justify-center">
               <div className="relative">
-                <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-[oklch(0.51_0.2_17)] to-[oklch(0.646_0.222_41.116)] opacity-70 blur"></div>
+                <div
+                  className={`absolute -inset-1 rounded-full bg-gradient-to-r from-${themeStyles.avatarBg} to-${themeStyles.avatarBg} opacity-70 blur`}
+                ></div>
                 <Avatar className="border-primary/20 relative h-32 w-32 border shadow-sm">
                   <AvatarImage
                     src={data.user.image as string}
                     alt={data.user.name as string}
                     className="object-cover"
                   />
-                  <AvatarFallback className="bg-[oklch(0.51_0.2_17)] text-3xl text-white">
+                  <AvatarFallback
+                    className={`${themeStyles.avatarBg} text-3xl ${themeStyles.buttonText}`}
+                  >
                     {data.user.name?.charAt(0).toUpperCase() ?? "U"}
                   </AvatarFallback>
                 </Avatar>
               </div>
             </div>
             <div className="mb-10 text-center">
-              <div className="bg-primary/20 inline-block rounded-full px-4 py-1 text-sm font-medium text-[oklch(0.51_0.2_17)]">
+              <div
+                className={`${themeStyles.nameBg} inline-block ${themeStyles.nameText} rounded-full px-4 py-1 text-sm font-medium ${themeStyles.buttonBg.replace(
+                  "bg-",
+                  "text-",
+                )}`}
+              >
                 @{data.user.name}
               </div>
             </div>
             <div className="mb-8 text-center">
-              <h1 className="mb-2 text-2xl font-bold tracking-tight">
+              <h1
+                className={`mb-2 text-2xl font-bold tracking-tight ${themeStyles.text}`}
+              >
                 {data.title}
               </h1>
               {data.description && (
-                <p className="text-muted-foreground mx-auto max-w-xs">
+                <p className={`mx-auto max-w-xs ${themeStyles.mutedText}`}>
                   {data.description}
                 </p>
               )}
@@ -217,7 +261,7 @@ export default async function Page({
                     <div key={index} className="group relative">
                       <Button
                         variant="bio"
-                        className={`h-12 w-full rounded-xl text-white shadow-md transition-all duration-300`}
+                        className={`h-12 w-full rounded-xl shadow-md transition-all duration-300 ${themeStyles.buttonBg} ${themeStyles.buttonText}`}
                       >
                         <Link
                           href={url}
@@ -235,30 +279,34 @@ export default async function Page({
                   );
                 })
               ) : (
-                <div className="bg-muted/50 flex flex-col items-center justify-center rounded-xl px-4 py-12 text-center">
-                  <Globe className="mb-4 h-12 w-12 opacity-40" />
-                  <p className="text-muted-foreground font-medium">
-                    Nenhum link social disponível
-                  </p>
-                  <p className="text-muted-foreground mt-2 text-sm">
+                <div
+                  className={`flex flex-col items-center justify-center rounded-xl px-4 py-12 text-center ${themeStyles.mutedText}`}
+                >
+                  <Globe
+                    className={`mb-4 h-12 w-12 ${themeStyles.mutedText}`}
+                  />
+                  <p className="font-medium">Nenhum link social disponível</p>
+                  <p className="mt-2 text-sm">
                     Adicione links através do seu painel de controle
                   </p>
                 </div>
               )}
             </div>
           </CardContent>
-          <CardFooter className="flex justify-center pt-6 pb-8">
+          <CardFooter
+            className={`flex justify-center pt-6 pb-8 ${themeStyles.mutedText}`}
+          >
             <div className="text-center">
               <div className="mb-2 flex items-center justify-center gap-1">
-                <span className="text-xs font-medium text-[oklch(0.556_0_0)]">
-                  Feito com
+                <span className="text-xs font-medium">Feito com</span>
+                <span className={`font-semibold ${themeStyles.nameText}`}>
+                  ♥
                 </span>
-                <span className="text-[oklch(0.577_0.245_27.325)]">♥</span>
-                <span className="font-semibold text-[oklch(0.51_0.2_17)]">
+                <span className={`font-semibold ${themeStyles.nameText}`}>
                   SYNC
                 </span>
               </div>
-              <p className="text-xs text-[oklch(0.556_0_0)]">
+              <p className="text-xs">
                 © {new Date().getFullYear()} • Todos os direitos reservados
               </p>
             </div>

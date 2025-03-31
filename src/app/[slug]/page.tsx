@@ -16,16 +16,59 @@ import {
   AvatarImage,
 } from "@/app/_components/ui/avatar";
 import { Button } from "@/app/_components/ui/button";
-import { getLinkBySlug } from "../app/links/new/actions"; // Ajuste o caminho
+import { getLinkBySlug } from "../app/links/new/actions";
 
+// Definição dos temas
+const themes = {
+  light: {
+    background: "bg-white",
+    text: "text-black",
+    mutedText: "text-muted-foreground",
+    buttonBg: "bg-primary",
+    nameBg: "bg-primary/20",
+    nameText: "text-primary",
+    buttonText: "text-white",
+    avatarBg: "bg-primary",
+  },
+  dark: {
+    background: "bg-zinc-950",
+    text: "text-white",
+    mutedText: "text-muted-foreground",
+    buttonBg: "bg-primary",
+    nameBg: "bg-primary/20",
+    nameText: "text-primary",
+    buttonText: "text-white",
+    avatarBg: "bg-primary",
+  },
+  blue: {
+    background: "bg-zinc-950",
+    text: "text-white",
+    mutedText: "text-muted-foreground",
+    nameBg: "bg-blue-700/20",
+    nameText: "text-blue-500",
+    buttonBg: "bg-blue-700",
+    buttonText: "text-white",
+    avatarBg: "bg-blue-600",
+  },
+  green: {
+    background: "bg-zync-950",
+    text: "text-white",
+    mutedText: "text-muted-foreground",
+    nameBg: "bg-green-700/20",
+    nameText: "text-green-500",
+    buttonBg: "bg-green-700",
+    buttonText: "text-white",
+    avatarBg: "bg-green-600",
+  },
+};
 const platformStyles: Record<string, { icon: ReactNode }> = {
-  instagram: { icon: <Instagram className="h-5 w-5 text-white" /> },
-  twitter: { icon: <Twitter className="h-5 w-5 text-white" /> },
-  youtube: { icon: <Youtube className="h-5 w-5 text-white" /> },
-  facebook: { icon: <Facebook className="h-5 w-5 text-white" /> },
-  linkedin: { icon: <Linkedin className="h-5 w-5 text-white" /> },
-  github: { icon: <Github className="h-5 w-5 text-white" /> },
-  other: { icon: <Globe className="h-5 w-5 text-white" /> },
+  instagram: { icon: <Instagram className="h-5 w-5" /> },
+  twitter: { icon: <Twitter className="h-5 w-5" /> },
+  youtube: { icon: <Youtube className="h-5 w-5" /> },
+  facebook: { icon: <Facebook className="h-5 w-5" /> },
+  linkedin: { icon: <Linkedin className="h-5 w-5" /> },
+  github: { icon: <Github className="h-5 w-5" /> },
+  other: { icon: <Globe className="h-5 w-5" /> },
 };
 
 const detectPlatform = (url: string): string => {
@@ -73,7 +116,7 @@ export default async function Page({
         <div className="w-full lg:max-w-md">
           <Card className="border-none bg-transparent shadow-xl">
             <CardContent className="pt-12 text-center">
-              <p className="text-[oklch(0.556_0_0)]">
+              <p className="text-gray-600">
                 Nenhum link encontrado para o slug {slug}...
               </p>
             </CardContent>
@@ -84,22 +127,29 @@ export default async function Page({
   }
 
   const socialLinks = linkData.socialLinksJson ?? [];
+  const theme = linkData.theme ?? "light";
+  const themeStyles = themes[theme as keyof typeof themes];
 
   return (
-    <div className="bg-background flex min-h-screen w-full items-center justify-center p-4">
+    <div
+      className={`${themeStyles.background} flex min-h-screen w-full items-center justify-center p-4`}
+    >
       <div className="w-full lg:max-w-md">
-        <Card className="border-none bg-transparent shadow-xl">
+        <Card
+          className={`border-none ${themeStyles.background} ${themeStyles.text}`}
+        >
           <CardContent className="pt-12">
             <div className="mb-8 flex justify-center">
               <div className="relative">
-                <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-[oklch(0.51_0.2_17)] to-[oklch(0.646_0.222_41.116)] opacity-70 blur"></div>
                 <Avatar className="border-primary/20 relative h-32 w-32 border shadow-sm">
                   <AvatarImage
                     src={linkData.user.image as string}
                     alt={linkData.user.name as string}
                     className="object-cover"
                   />
-                  <AvatarFallback className="bg-[oklch(0.51_0.2_17)] text-3xl text-white">
+                  <AvatarFallback
+                    className={`${themeStyles.avatarBg} text-3xl ${themeStyles.buttonText}`}
+                  >
                     {linkData.user.name?.charAt(0).toUpperCase() ?? "U"}
                   </AvatarFallback>
                 </Avatar>
@@ -107,16 +157,23 @@ export default async function Page({
             </div>
 
             <div className="mb-10 text-center">
-              <div className="bg-primary/20 inline-block rounded-full px-4 py-1 text-sm font-medium text-[oklch(0.51_0.2_17)]">
+              <div
+                className={`${themeStyles.nameBg} inline-block ${themeStyles.nameText} rounded-full px-4 py-1 text-sm font-medium ${themeStyles.buttonBg.replace(
+                  "bg-",
+                  "text-",
+                )}`}
+              >
                 @{linkData.user.name}
               </div>
             </div>
 
             <div className="">
               <div className="mb-4 flex flex-col text-center">
-                <h1 className="mb-0 text-2xl font-bold">{linkData.title}</h1>
+                <h1 className={`mb-0 text-2xl font-bold ${themeStyles.text}`}>
+                  {linkData.title}
+                </h1>
                 {linkData.description && (
-                  <p className="mx-auto max-w-xs text-[oklch(0.556_0_0)]">
+                  <p className={`mx-auto max-w-xs ${themeStyles.mutedText}`}>
                     {linkData.description}
                   </p>
                 )}
@@ -133,7 +190,7 @@ export default async function Page({
                     return (
                       <div key={urlIndex} className="group">
                         <Button
-                          className="flex h-12 w-full items-center rounded-full border"
+                          className={`flex h-12 w-full items-center rounded-full border ${themeStyles.buttonBg} ${themeStyles.buttonText}`}
                           variant="bio"
                         >
                           <Link
@@ -142,7 +199,7 @@ export default async function Page({
                             rel="noopener noreferrer"
                             className="flex w-full items-center justify-center gap-x-3"
                           >
-                            <div className="text-primary">{icon}</div>
+                            <div>{icon}</div>
                             <span>{title}</span>
                           </Link>
                         </Button>
@@ -150,27 +207,29 @@ export default async function Page({
                     );
                   })
                 ) : (
-                  <div className="text-center text-[oklch(0.556_0_0)]">
-                    Nenhum link social disponível para &quot;{linkData.title}
-                    &quot;
+                  <div className={`text-center ${themeStyles.mutedText}`}>
+                    Nenhum link social disponível para $quot;{linkData.title}
+                    $quot;
                   </div>
                 )}
               </div>
             </div>
           </CardContent>
 
-          <CardFooter className="flex justify-center pt-6 pb-8">
+          <CardFooter
+            className={`flex justify-center pt-6 pb-8 ${themeStyles.mutedText}`}
+          >
             <div className="text-center">
               <div className="mb-2 flex items-center justify-center gap-1">
-                <span className="text-xs font-medium text-[oklch(0.556_0_0)]">
-                  Feito com
+                <span className="text-xs font-medium">Feito com</span>
+                <span className={`font-semibold ${themeStyles.nameText}`}>
+                  ♥
                 </span>
-                <span className="text-[oklch(0.577_0.245_27.325)]">♥</span>
-                <span className="font-semibold text-[oklch(0.51_0.2_17)]">
+                <span className={`font-semibold ${themeStyles.nameText}`}>
                   SYNC
                 </span>
               </div>
-              <p className="text-xs text-[oklch(0.556_0_0)]">
+              <p className="text-xs">
                 © {new Date().getFullYear()} • Todos os direitos reservados
               </p>
             </div>

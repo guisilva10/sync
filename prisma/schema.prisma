@@ -33,6 +33,7 @@ model Links {
   slug            String?  @unique
   description     String?
   socialLinksJson String[]  
+  theme           String?
   userId          String
   user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt       DateTime  @default(now())

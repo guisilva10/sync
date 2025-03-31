@@ -12,7 +12,6 @@ import {
   LifeBuoy,
   Link2Icon,
   Paintbrush,
-  Plug,
   Projector,
   Send,
 } from "lucide-react";
@@ -65,12 +64,11 @@ export function MainSidebar({ user }: MainSidebarProps) {
       },
       {
         title: "Aparência",
-
         icon: Paintbrush,
         items: [
           {
             title: "Temas",
-            url: "#",
+            url: "/app/appearence/themes",
           },
           {
             title: "Personalizar",
@@ -82,21 +80,6 @@ export function MainSidebar({ user }: MainSidebarProps) {
         title: "Analytics",
         url: "#",
         icon: BarChart3,
-      },
-      {
-        title: "Integrações",
-
-        icon: Plug,
-        items: [
-          {
-            title: "Google Analytics",
-            url: "#",
-          },
-          {
-            title: "Meta Pixel",
-            url: "#",
-          },
-        ],
       },
     ],
     navSecondary: [

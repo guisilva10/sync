@@ -10,7 +10,7 @@ export function DashboardPage({
   children,
 }: DashboardPageGenericProps) {
   return (
-    <section className={cn(["h-screen overflow-y-hidden", className])}>
+    <section className={cn(["h-screen overflow-y-auto", className])}>
       {children}
     </section>
   );

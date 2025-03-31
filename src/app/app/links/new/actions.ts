@@ -10,6 +10,7 @@ export type LinkFormData = {
   description: string;
   slug: string;
   socialLinksJson: string[];
+  theme: string;
 };
 
 const slugify = (text: string): string =>
@@ -35,6 +36,7 @@ export async function saveLink(data: LinkFormData) {
       description: data.description,
       slug: uniqueSlug,
       socialLinksJson: data.socialLinksJson,
+      theme: data.theme || "light",
       userId: session.user.id,
     },
   });
@@ -186,33 +188,28 @@ export const getLinksByName = async (name: string) => {
 };
 
 export const getLinkById = async (id: string) => {
-  try {
-    const link = await prisma.links.findUnique({
-      where: {
-        id: id, // Busca pelo ID do link
-      },
-      select: {
-        id: true,
-        slug: true,
-        socialLinksJson: true,
-        title: true,
-        description: true,
-        user: {
-          select: {
-            id: true,
-            name: true,
-            image: true,
-          },
+  const link = await prisma.links.findUnique({
+    where: {
+      id,
+    },
+    select: {
+      id: true,
+      slug: true,
+      socialLinksJson: true,
+      title: true,
+      theme: true,
+      description: true,
+      user: {
+        select: {
+          id: true,
+          name: true,
+          image: true,
         },
       },
-    });
+    },
+  });
 
-    console.log("Link encontrado:", link);
-    return link;
-  } catch (error) {
-    console.error("Erro ao buscar link por ID:", error);
-    return null;
-  }
+  return link;
 };
 
 export const getLinkBySlug = async (slug: string) => {
@@ -227,6 +224,7 @@ export const getLinkBySlug = async (slug: string) => {
         socialLinksJson: true,
         title: true,
         description: true,
+        theme: true,
         user: {
           select: {
             id: true,
@@ -301,5 +299,24 @@ export const updateLinkById = async (
 
   revalidatePath("/app");
   revalidatePath("/app/links");
+  return updatedLink;
+};
+
+export const updateLinkTheme = async (id: string, theme: string) => {
+  const session = await auth();
+  if (!session) {
+    throw new Error("Não autorizado");
+  }
+
+  const updatedLink = await prisma.links.update({
+    where: {
+      id,
+      userId: session.user.id,
+    },
+    data: {
+      theme,
+    },
+  });
+
   return updatedLink;
 };

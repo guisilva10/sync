@@ -58,8 +58,8 @@ import { saveLink, type LinkFormData } from "./actions";
 import { useToast } from "@/app/_components/ui/use-toast";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { RadioGroup, RadioGroupItem } from "@/app/_components/ui/radio-group";
 
-// Tipo para os links sociais
 type SocialLink = {
   id: number;
   platform: string;
@@ -67,7 +67,6 @@ type SocialLink = {
   url: string;
 };
 
-// Mapeamento de plataformas para ícones
 const platformIcons: Record<string, React.ReactNode> = {
   instagram: <Instagram className="h-5 w-5" />,
   twitter: <Twitter className="h-5 w-5" />,
@@ -78,7 +77,6 @@ const platformIcons: Record<string, React.ReactNode> = {
   other: <Globe className="h-5 w-5" />,
 };
 
-// Lista de plataformas disponíveis
 const availablePlatforms = [
   { value: "instagram", label: "Instagram" },
   { value: "twitter", label: "Twitter" },
@@ -89,13 +87,73 @@ const availablePlatforms = [
   { value: "other", label: "Outro Link" },
 ];
 
+const themes = [
+  {
+    value: "light",
+    label: "Claro",
+    styles: {
+      background: "bg-white",
+      text: "text-black",
+      mutedText: "text-muted-foreground",
+      buttonBg: "bg-primary",
+      nameBg: "bg-primary/20",
+      nameText: "text-primary",
+      buttonText: "text-white",
+      avatarBg: "bg-primary",
+    },
+  },
+  {
+    value: "dark",
+    label: "Escuro",
+    styles: {
+      background: "bg-zinc-950",
+      text: "text-white",
+      mutedText: "text-muted-foreground",
+      buttonBg: "bg-primary",
+      nameBg: "bg-primary/20",
+      nameText: "text-primary",
+      buttonText: "text-white",
+      avatarBg: "bg-primary",
+    },
+  },
+  {
+    value: "blue",
+    label: "Azul",
+    styles: {
+      background: "bg-zinc-950",
+      text: "text-white",
+      mutedText: "text-muted-foreground",
+      nameBg: "bg-blue-700/20",
+      nameText: "text-blue-500",
+      buttonBg: "bg-blue-700",
+      buttonText: "text-white",
+      avatarBg: "bg-blue-600",
+    },
+  },
+  {
+    value: "green",
+    label: "Verde",
+    styles: {
+      background: "bg-zync-950",
+      text: "text-white",
+      mutedText: "text-muted-foreground",
+      nameBg: "bg-green-700/20",
+      nameText: "text-green-500",
+      buttonBg: "bg-green-700",
+      buttonText: "text-white",
+      avatarBg: "bg-green-600",
+    },
+  },
+];
+
 export default function LinkInBioPage() {
   const router = useRouter();
   const initialLinkData = {
     title: "",
     description: "",
     slug: "",
-    socialLinksJson: [], // Ajustado para array vazio de strings
+    socialLinksJson: [],
+    theme: "light",
   };
 
   const initialSocialLinks = [
@@ -110,10 +168,8 @@ export default function LinkInBioPage() {
   }>({});
   const [isLoading, setIsLoading] = useState(false);
 
-  // Toast para feedback ao usuário
   const { toast } = useToast();
 
-  // Função de validação
   const validateData = () => {
     const errors: { [key: string]: string } = {};
 
@@ -136,19 +192,18 @@ export default function LinkInBioPage() {
     return Object.keys(errors).length === 0;
   };
 
-  // Função para salvar os dados
   const saveData = async () => {
     if (validateData()) {
       setIsLoading(true);
       try {
-        // Criar array de URLs a partir dos socialLinks
         const socialLinksArray = socialLinks.map((link) => link.url);
 
         const formData: LinkFormData = {
           title: linkData.title,
           slug: linkData.slug,
           description: linkData.description,
-          socialLinksJson: socialLinksArray, // Passando apenas as URLs como array de strings
+          socialLinksJson: socialLinksArray,
+          theme: linkData.theme,
         };
 
         await saveLink(formData);
@@ -175,9 +230,8 @@ export default function LinkInBioPage() {
     }
   };
 
-  // Atualização dos campos principais
   const updateLinkData = (
-    field: "title" | "description" | "slug",
+    field: "title" | "description" | "slug" | "theme",
     value: string,
   ) => {
     setLinkData((prev) => ({ ...prev, [field]: value }));
@@ -190,7 +244,6 @@ export default function LinkInBioPage() {
     }
   };
 
-  // Adicionar novo link social
   const addSocialLink = () => {
     setSocialLinks([
       ...socialLinks,
@@ -198,12 +251,10 @@ export default function LinkInBioPage() {
     ]);
   };
 
-  // Remover link social
   const removeSocialLink = (id: number) => {
     setSocialLinks(socialLinks.filter((link) => link.id !== id));
   };
 
-  // Atualizar um link social
   const updateSocialLink = (
     id: number,
     field: keyof SocialLink,
@@ -234,6 +285,9 @@ export default function LinkInBioPage() {
       });
     }
   };
+
+  const selectedTheme =
+    themes.find((t) => t.value === linkData.theme) || themes[0];
 
   return (
     <DashboardPage>
@@ -271,7 +325,6 @@ export default function LinkInBioPage() {
                       </Tooltip>
                     </TooltipProvider>
                   </Label>
-
                   <Input
                     id="main-title"
                     placeholder="Seu nome ou marca"
@@ -299,6 +352,30 @@ export default function LinkInBioPage() {
                       updateLinkData("description", e.target.value)
                     }
                   />
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Tema</Label>
+                  <RadioGroup
+                    value={linkData.theme}
+                    onValueChange={(value) => updateLinkData("theme", value)}
+                    className="flex flex-col gap-2 space-y-2"
+                  >
+                    {themes.map((theme) => (
+                      <div
+                        key={theme.value}
+                        className="flex items-center gap-x-2"
+                      >
+                        <RadioGroupItem value={theme.value} id={theme.value} />
+                        <Label
+                          htmlFor={theme.value}
+                          className="flex items-center"
+                        >
+                          {theme.label}
+                        </Label>
+                      </div>
+                    ))}
+                  </RadioGroup>
                 </div>
               </CardContent>
             </Card>
@@ -465,35 +542,36 @@ export default function LinkInBioPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="mx-auto max-w-md overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md">
+                <div
+                  className={`mx-auto max-w-md overflow-hidden rounded-lg border border-gray-200 shadow-md ${selectedTheme.styles.background} ${selectedTheme.styles.text}`}
+                >
                   <div className="px-6 py-8 text-center">
-                    {/* Avatar placeholder */}
-                    <div className="bg-primary mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full text-white">
+                    <div
+                      className={`${selectedTheme.styles.avatarBg} mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full ${selectedTheme.styles.buttonText}`}
+                    >
                       S
                     </div>
-
-                    {/* Preview do título */}
-                    <h2 className="mb-2 text-xl font-bold text-black">
+                    <h2
+                      className={`mb-2 text-xl font-bold ${selectedTheme.styles.text}`}
+                    >
                       {linkData.title || "Seu Nome ou Marca"}
                     </h2>
-
-                    {/* Preview da descrição */}
-                    <p className="mb-6 text-gray-600">
+                    <p className={`mb-6 ${selectedTheme.styles.mutedText}`}>
                       {linkData.description || "Sua descrição aparecerá aqui"}
                     </p>
-
-                    {/* Links sociais */}
                     <div className="mt-6 space-y-3">
                       {socialLinks.length > 0 ? (
                         socialLinks.map((link) => (
                           <div
                             key={link.id}
-                            className="bg-primary flex cursor-pointer items-center justify-center gap-2 rounded-md px-4 py-3 transition-colors"
+                            className={`${selectedTheme.styles.buttonBg} flex cursor-pointer items-center justify-center gap-2 rounded-md px-4 py-3 transition-colors`}
                           >
                             <Link href={link.url} className="mb-2">
-                              <span className="flex items-center gap-2 text-white">
+                              <span
+                                className={`flex items-center gap-2 ${selectedTheme.styles.buttonText}`}
+                              >
                                 {platformIcons[link.platform]}
-                                <span className="font-medium text-white">
+                                <span className="font-medium">
                                   {link.title}
                                 </span>
                               </span>
