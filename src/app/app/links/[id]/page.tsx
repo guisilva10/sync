@@ -13,7 +13,6 @@ import {
   Linkedin,
   Github,
   Globe,
-  Eye,
   ArrowLeft,
 } from "lucide-react";
 import Link from "next/link";
@@ -36,7 +35,8 @@ import {
   DashboardPageHeaderTitle,
   DashboardPageMain,
 } from "@/app/_components/page-dashboard";
-import { supabase } from "@/services/supabase/index"; // Ajuste o caminho para seu arquivo de configuração do Supabase
+import { supabase } from "@/services/supabase/index";
+import { VisualizeButton } from "../(main)/_components/visualize-button";
 
 // Definição dos temas
 const themes = {
@@ -143,6 +143,9 @@ export default async function Page({
     ? supabase.storage.from("images").getPublicUrl(data.image).data.publicUrl
     : null;
 
+  // Sanitiza o nome do usuário para ser usado como slug
+  const usernameSlug = data.user.name?.toLowerCase().replace(/\s+/g, "-") || "";
+
   return (
     <DashboardPage>
       <DashboardPageHeader>
@@ -177,22 +180,15 @@ export default async function Page({
                 </Tooltip>
               </TooltipProvider>
             </div>
-
             <div className="absolute top-4 right-4 z-10 flex gap-2">
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      asChild
-                      className="rounded-full"
-                    >
-                      <Link href={`/${data.slug}`}>
-                        <Eye className={`h-4 w-4 ${themeStyles.text}`} />
-                        <span className="sr-only">Visualizar</span>
-                      </Link>
-                    </Button>
+                    <VisualizeButton
+                      linkId={id}
+                      userId={data.userId}
+                      usernameSlug={usernameSlug}
+                    />
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Visualizar página</p>

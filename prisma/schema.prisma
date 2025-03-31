@@ -32,6 +32,7 @@ model Links {
   title           String?   
   slug            String?  @unique
   description     String?
+  isPrimary       Boolean @default(false)
   socialLinksJson Json
   theme           String?
   image           String?

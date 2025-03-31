@@ -1,3 +1,4 @@
+// _components/link-item.tsx
 "use client";
 
 import { Button } from "@/app/_components/ui/button";
@@ -12,30 +13,28 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/app/_components/ui/alert-dialog";
-import { Trash2Icon } from "lucide-react";
+import { PencilIcon, Trash2Icon } from "lucide-react";
 import Link from "next/link";
-
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { deleteLinkById } from "../../new/actions";
-import { EditLinkSheet } from "./edit-link-sheet";
+
 import { toast } from "@/app/_components/ui/use-toast";
+
+interface SocialLink {
+  title: string;
+  url: string;
+}
 
 interface LinkItemProps {
   id: string;
   title: string | null;
   slug: string | null;
   description: string | null;
-  socialLinksJson: string[];
+  socialLinksJson: SocialLink[];
 }
 
-export function LinkItem({
-  id,
-  title,
-  slug,
-  description,
-  socialLinksJson,
-}: LinkItemProps) {
+export function LinkItem({ id, title }: LinkItemProps) {
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -50,6 +49,11 @@ export function LinkItem({
       });
     } catch (error) {
       console.error("Erro ao deletar link:", error);
+      toast({
+        title: "Erro",
+        description: "Falha ao excluir o link.",
+        variant: "destructive",
+      });
     } finally {
       setIsDeleting(false);
     }
@@ -63,16 +67,18 @@ export function LinkItem({
         </Link>
       </div>
       <div className="flex space-x-2">
-        <EditLinkSheet
-          id={id}
-          title={title}
-          slug={slug}
-          description={description}
-          socialLinksJson={socialLinksJson}
-        />
+        <div>
+          <Button asChild variant="ghost">
+            <Link href={`/app/links/edit/${id}`} className="flex items-center">
+              Editar
+              <PencilIcon className="ml-1 size-4" />
+            </Link>
+          </Button>
+        </div>
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button variant="destructive" size="sm" disabled={isDeleting}>
+              Excluir
               <Trash2Icon className="h-4 w-4" />
             </Button>
           </AlertDialogTrigger>

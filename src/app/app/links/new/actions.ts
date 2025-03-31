@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
 import { auth } from "@/services/auth";
@@ -190,26 +191,41 @@ export const getLinksByName = async (name: string) => {
 };
 
 export const getLinkById = async (id: string) => {
+  const session = await auth();
+  if (!session) {
+    return;
+  }
   const link = await prisma.links.findUnique({
     where: {
       id,
+      userId: session.user.id,
+    },
+    include: {
+      linkClicks: true,
+      user: true,
+    },
+  });
+
+  return link;
+};
+
+export const getLink = async (id: string) => {
+  const session = await auth();
+  if (!session) {
+    return;
+  }
+  const link = await prisma.links.findUnique({
+    where: {
+      id,
+      userId: session.user.id,
     },
     select: {
-      id: true,
-      slug: true,
-      socialLinksJson: true,
-      title: true,
-      theme: true,
       image: true,
-      linkClicks: true,
+      title: true,
       description: true,
-      user: {
-        select: {
-          id: true,
-          name: true,
-          image: true,
-        },
-      },
+      socialLinksJson: true,
+      theme: true,
+      slug: true,
     },
   });
 
@@ -264,6 +280,10 @@ export const deleteLinkById = async (id: string) => {
   revalidatePath("/app/links");
   return link;
 };
+interface SocialLink {
+  title: string;
+  url: string;
+}
 
 export const updateLinkById = async (
   id: string,
@@ -271,7 +291,9 @@ export const updateLinkById = async (
     title?: string;
     slug?: string;
     description?: string;
-    socialLinksJson?: string[];
+    socialLinksJson?: SocialLink[];
+    theme?: string;
+    image?: string;
   },
 ) => {
   const session = await auth();
@@ -289,17 +311,26 @@ export const updateLinkById = async (
     }
   }
 
+  // Prepara os dados para atualização
+  const updateData: any = {
+    title: data.title,
+    slug: data.slug,
+    description: data.description,
+    theme: data.theme,
+    image: data.image,
+  };
+
+  // Converte socialLinksJson para JSON se fornecido
+  if (data.socialLinksJson) {
+    updateData.socialLinksJson = data.socialLinksJson;
+  }
+
   const updatedLink = await prisma.links.update({
     where: {
       id,
       userId: session.user.id,
     },
-    data: {
-      title: data.title,
-      slug: data.slug,
-      description: data.description,
-      socialLinksJson: data.socialLinksJson,
-    },
+    data: updateData,
   });
 
   revalidatePath("/app");
@@ -367,4 +398,76 @@ export async function incrementLinkClick(linkId: string, url: string) {
     console.error("Erro ao registrar clique:", error);
     throw error;
   }
+}
+
+export async function getLinkByUsername(username: string) {
+  console.log("Buscando link para username:", username);
+
+  const sanitizedUsername = username.replace(/-/g, " "); // Converte hífens em espaços
+
+  // Busca o usuário e o link primário
+  const user = await prisma.user.findFirst({
+    where: {
+      name: {
+        equals: sanitizedUsername,
+        mode: "insensitive",
+      },
+    },
+    include: {
+      links: {
+        where: {
+          isPrimary: true, // Pega o link primário
+        },
+        take: 1, // Garante que pegamos apenas um
+      },
+    },
+  });
+
+  if (!user || !user.links.length) {
+    console.log(
+      "Nenhum link primário encontrado para o usuário:",
+      sanitizedUsername,
+    );
+    return null;
+  }
+
+  const primaryLinkSlug = user.links[0].slug;
+
+  // Usa findUnique com o slug único
+  const link = await prisma.links.findUnique({
+    where: {
+      slug: primaryLinkSlug || "",
+    },
+    include: {
+      user: true,
+    },
+  });
+
+  console.log("Link encontrado:", link);
+  return link;
+}
+
+export async function updateLinkPrimaryStatus(linkId: string, userId: string) {
+  // Primeiro, desmarca todos os links do usuário como não primários
+  await prisma.links.updateMany({
+    where: {
+      userId,
+      isPrimary: true,
+    },
+    data: {
+      isPrimary: false,
+    },
+  });
+
+  // Marca o link selecionado como primário
+  const updatedLink = await prisma.links.update({
+    where: {
+      id: linkId,
+    },
+    data: {
+      isPrimary: true,
+    },
+  });
+
+  return updatedLink;
 }

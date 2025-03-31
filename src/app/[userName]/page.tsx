@@ -1,16 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Card, CardContent, CardFooter } from "@/app/_components/ui/card";
-
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
 } from "@/app/_components/ui/avatar";
-import { getLinkBySlug } from "../app/links/new/actions";
+import { getLinkByUsername } from "../app/links/new/actions"; // Use getLinkById em vez de getLinkByUsername
 import { supabase } from "@/services/supabase";
 import { SocialLinksClient } from "./_components/social-link-conent";
-// Novo componente cliente
 
 // Definição dos temas
 const themes = {
@@ -59,21 +57,25 @@ const themes = {
 export default async function Page({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ userName: string }>;
 }) {
-  const { slug } = await params;
-  console.log("Slug recebido:", slug);
+  const { userName } = await params;
 
-  const linkData = await getLinkBySlug(slug);
+  const linkData = await getLinkByUsername(userName);
 
-  if (!linkData || !linkData.user) {
+  if (
+    !linkData ||
+    !linkData.user ||
+    linkData.user.name?.toLowerCase().replace(/\s+/g, "-") !== userName
+  ) {
     return (
       <div className="bg-background flex min-h-screen w-full items-center justify-center p-4">
         <div className="w-full lg:max-w-md">
           <Card className="border-none bg-transparent shadow-xl">
             <CardContent className="pt-12 text-center">
               <p className="text-gray-600">
-                Nenhum link encontrado para o slug {slug}...
+                Nenhum link encontrado para o usuário &quot;{userName}&quot; com
+                o ID &quot;
               </p>
             </CardContent>
           </Card>

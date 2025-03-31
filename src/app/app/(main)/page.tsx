@@ -136,10 +136,8 @@ export default async function Page() {
                       slug={link.slug}
                       description={link.description}
                       socialLinksJson={
-                        Array.isArray(link.socialLinksJson)
-                          ? link.socialLinksJson
-                              .filter((link) => link !== null)
-                              .map((link) => link.toString())
+                        typeof link.socialLinksJson === "string"
+                          ? JSON.parse(link.socialLinksJson)
                           : []
                       }
                     />

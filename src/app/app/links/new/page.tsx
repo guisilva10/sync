@@ -183,11 +183,11 @@ export default function LinkInBioPage() {
   }
 
   if (status === "unauthenticated") {
-    router.push("/api/auth/signin"); // Redireciona para login se não estiver autenticado
+    router.push("/api/auth/signin");
     return null;
   }
 
-  const userId = session?.user?.id; // Pega o userId da sessão do NextAuth
+  const userId = session?.user?.id;
 
   const validateData = () => {
     const errors: { [key: string]: string } = {};
