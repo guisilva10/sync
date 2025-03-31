@@ -448,7 +448,7 @@ export async function getLinkByUsername(username: string) {
 }
 
 export async function updateLinkPrimaryStatus(linkId: string, userId: string) {
-  // Primeiro, desmarca todos os links do usuário como não primários
+  // Desmarca todos os links do usuário como não primários
   await prisma.links.updateMany({
     where: {
       userId,
@@ -469,5 +469,7 @@ export async function updateLinkPrimaryStatus(linkId: string, userId: string) {
     },
   });
 
+  revalidatePath("/app");
+  revalidatePath("/app/links");
   return updatedLink;
 }

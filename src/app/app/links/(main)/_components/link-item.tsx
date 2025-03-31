@@ -17,9 +17,10 @@ import { PencilIcon, Trash2Icon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { deleteLinkById } from "../../new/actions";
+import { deleteLinkById, updateLinkPrimaryStatus } from "../../new/actions";
 
 import { toast } from "@/app/_components/ui/use-toast";
+import { Switch } from "@/app/_components/ui/switch";
 
 interface SocialLink {
   title: string;
@@ -32,11 +33,14 @@ interface LinkItemProps {
   slug: string | null;
   description: string | null;
   socialLinksJson: SocialLink[];
+  isPrimary: boolean; // Adicione isPrimary como prop
+  userId: string; // Adicione userId para identificar o usuário
 }
 
-export function LinkItem({ id, title }: LinkItemProps) {
+export function LinkItem({ id, title, isPrimary, userId }: LinkItemProps) {
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isPrimaryState, setIsPrimaryState] = useState(isPrimary);
 
   const handleDelete = async () => {
     setIsDeleting(true);
@@ -59,9 +63,43 @@ export function LinkItem({ id, title }: LinkItemProps) {
     }
   };
 
+  const handleTogglePrimary = async (checked: boolean) => {
+    try {
+      if (checked) {
+        await updateLinkPrimaryStatus(id, userId); // Marca como primário
+        setIsPrimaryState(true);
+        toast({
+          title: "Link ativado",
+          description: `O link "${title || "Sem título"}" agora é o ativo para compartilhar.`,
+        });
+      } else {
+        // Desativa todos os links do usuário como não primários
+        await updateLinkPrimaryStatus(id, userId); // Passa o userId para desativar todos
+        setIsPrimaryState(false);
+        toast({
+          title: "Link desativado",
+          description: `O link "${title || "Sem título"}" não é mais o ativo para compartilhar.`,
+        });
+      }
+      router.refresh(); // Atualiza a página para refletir o novo estado
+    } catch (error) {
+      console.error("Erro ao atualizar link primário:", error);
+      toast({
+        title: "Erro",
+        description: "Falha ao atualizar o link ativo.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="flex items-center justify-between border-b pb-2 last:border-b-0">
-      <div>
+      <div className="flex items-center gap-4">
+        <Switch
+          checked={isPrimaryState}
+          onCheckedChange={handleTogglePrimary}
+          aria-label={`Ativar/desativar link "${title || "Sem título"}" como primário`}
+        />
         <Link href={`/app/links/${id}`}>
           <p className="font-medium">{title || "Sem título"}</p>
         </Link>

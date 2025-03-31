@@ -55,6 +55,8 @@ export default async function Page() {
                       id={link.id as string}
                       title={link.title || ""}
                       slug={link.slug}
+                      isPrimary={link.isPrimary}
+                      userId={link.userId}
                       description={link.description}
                       socialLinksJson={
                         typeof link.socialLinksJson === "string"
