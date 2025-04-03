@@ -27,7 +27,7 @@ export function SocialLinkButton({
   return (
     <div className="group">
       <Button
-        className={`flex h-12 w-full items-center rounded-full border ${themeStyles.buttonBg} ${themeStyles.buttonText}`}
+        className={`flex h-12 w-full items-center rounded-full ${themeStyles.buttonBg} ${themeStyles.buttonText}`}
         variant="bio"
         onClick={() => onClick(linkId, url)}
       >

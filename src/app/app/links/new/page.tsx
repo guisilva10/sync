@@ -58,11 +58,12 @@ import { saveLink, type LinkFormData } from "./actions";
 import { useToast } from "@/app/_components/ui/use-toast";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { RadioGroup, RadioGroupItem } from "@/app/_components/ui/radio-group";
+
 // Ajuste o caminho
 import { useSession } from "next-auth/react"; // Importação do NextAuth
 import { uploadImage } from "@/services/supabase/actions";
 import Loading from "./loading";
+import { themes } from "@/app/_components/theme/constants";
 
 type SocialLink = {
   id: number;
@@ -89,65 +90,6 @@ const availablePlatforms = [
   { value: "linkedin", label: "LinkedIn" },
   { value: "github", label: "GitHub" },
   { value: "other", label: "Outro Link" },
-];
-
-const themes = [
-  {
-    value: "light",
-    label: "Claro",
-    styles: {
-      background: "bg-white",
-      text: "text-black",
-      mutedText: "text-muted-foreground",
-      buttonBg: "bg-primary",
-      nameBg: "bg-primary/20",
-      nameText: "text-primary",
-      buttonText: "text-white",
-      avatarBg: "bg-primary",
-    },
-  },
-  {
-    value: "dark",
-    label: "Escuro",
-    styles: {
-      background: "bg-zinc-950",
-      text: "text-white",
-      mutedText: "text-muted-foreground",
-      buttonBg: "bg-primary",
-      nameBg: "bg-primary/20",
-      nameText: "text-primary",
-      buttonText: "text-white",
-      avatarBg: "bg-primary",
-    },
-  },
-  {
-    value: "blue",
-    label: "Azul",
-    styles: {
-      background: "bg-zinc-950",
-      text: "text-white",
-      mutedText: "text-muted-foreground",
-      nameBg: "bg-blue-700/20",
-      nameText: "text-blue-500",
-      buttonBg: "bg-blue-700",
-      buttonText: "text-white",
-      avatarBg: "bg-blue-600",
-    },
-  },
-  {
-    value: "green",
-    label: "Verde",
-    styles: {
-      background: "bg-zinc-950",
-      text: "text-white",
-      mutedText: "text-muted-foreground",
-      nameBg: "bg-green-700/20",
-      nameText: "text-green-500",
-      buttonBg: "bg-green-700",
-      buttonText: "text-white",
-      avatarBg: "bg-green-600",
-    },
-  },
 ];
 
 export default function LinkInBioPage() {
@@ -183,7 +125,7 @@ export default function LinkInBioPage() {
   }
 
   if (status === "unauthenticated") {
-    router.push("/api/auth/signin");
+    router.push("/api/auth/sign-in");
     return null;
   }
 
@@ -325,7 +267,9 @@ export default function LinkInBioPage() {
   };
 
   const selectedTheme =
-    themes.find((t) => t.value === linkData.theme) || themes[0];
+    themes.light.find((t) => t.value === linkData.theme) ||
+    themes.dark.find((t) => t.value === linkData.theme) ||
+    themes.light[0];
 
   return (
     <DashboardPage>
@@ -406,29 +350,29 @@ export default function LinkInBioPage() {
                     }
                   />
                 </div>
-
                 <div className="space-y-2">
-                  <Label>Tema</Label>
-                  <RadioGroup
+                  <Label htmlFor="theme">Tema</Label>
+                  <select
+                    id="theme"
                     value={linkData.theme}
-                    onValueChange={(value) => updateLinkData("theme", value)}
-                    className="flex flex-col gap-2 space-y-2"
+                    onChange={(e) => updateLinkData("theme", e.target.value)}
+                    className="border-input bg-background ring-offset-background focus-visible:ring-ring w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:outline-none"
                   >
-                    {themes.map((theme) => (
-                      <div
-                        key={theme.value}
-                        className="flex items-center gap-x-2"
-                      >
-                        <RadioGroupItem value={theme.value} id={theme.value} />
-                        <Label
-                          htmlFor={theme.value}
-                          className="flex items-center"
-                        >
+                    <optgroup label="Temas Claros">
+                      {themes.light.map((theme) => (
+                        <option key={theme.value} value={theme.value}>
                           {theme.label}
-                        </Label>
-                      </div>
-                    ))}
-                  </RadioGroup>
+                        </option>
+                      ))}
+                    </optgroup>
+                    <optgroup label="Temas Escuros">
+                      {themes.dark.map((theme) => (
+                        <option key={theme.value} value={theme.value}>
+                          {theme.label}
+                        </option>
+                      ))}
+                    </optgroup>
+                  </select>
                 </div>
               </CardContent>
             </Card>

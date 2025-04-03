@@ -15,7 +15,7 @@ import { Button } from "@/app/_components/ui/button";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { getLinksByUser } from "../../actions";
-import { LinkItem } from "./_components/link-item"; // Importe o novo componente
+import { LinkItem } from "./_components/link-item";
 
 export default async function Page() {
   const links = await getLinksByUser();

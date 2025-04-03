@@ -37,50 +37,7 @@ import {
 } from "@/app/_components/page-dashboard";
 import { supabase } from "@/services/supabase/index";
 import { VisualizeButton } from "../(main)/_components/visualize-button";
-
-// Definição dos temas
-const themes = {
-  light: {
-    background: "bg-white",
-    text: "text-black",
-    mutedText: "text-muted-foreground",
-    buttonBg: "bg-primary",
-    nameBg: "bg-primary/20",
-    nameText: "text-primary",
-    buttonText: "text-white",
-    avatarBg: "bg-primary",
-  },
-  dark: {
-    background: "bg-zinc-950",
-    text: "text-white",
-    mutedText: "text-muted-foreground",
-    buttonBg: "bg-primary",
-    nameBg: "bg-primary/20",
-    nameText: "text-primary",
-    buttonText: "text-white",
-    avatarBg: "bg-primary",
-  },
-  blue: {
-    background: "bg-zinc-950",
-    text: "text-white",
-    mutedText: "text-muted-foreground",
-    nameBg: "bg-blue-700/20",
-    nameText: "text-blue-500",
-    buttonBg: "bg-blue-700",
-    buttonText: "text-white",
-    avatarBg: "bg-blue-600",
-  },
-  green: {
-    background: "bg-zinc-950",
-    text: "text-white",
-    mutedText: "text-muted-foreground",
-    nameBg: "bg-green-700/20",
-    nameText: "text-green-500",
-    buttonBg: "bg-green-700",
-    buttonText: "text-white",
-    avatarBg: "bg-green-600",
-  },
-};
+import { themes } from "@/app/_components/theme/constants";
 
 const platformIcons: Record<string, { icon: React.ReactNode }> = {
   instagram: { icon: <Instagram className="h-5 w-5" /> },
@@ -135,8 +92,11 @@ export default async function Page({
         url: link.url,
       }))
     : [];
-  const theme = data.theme || "light";
-  const themeStyles = themes[theme as keyof typeof themes];
+
+  const themeStyles =
+    themes.light.find((t) => t.value === data.theme) ||
+    themes.dark.find((t) => t.value === data.theme) ||
+    themes.light[0];
 
   // Obtém a URL pública da imagem do Supabase, se existir
   const imageUrl = data.image
@@ -149,13 +109,13 @@ export default async function Page({
   return (
     <DashboardPage>
       <DashboardPageHeader>
-        <DashboardPageHeaderTitle className={themeStyles.text}>
+        <DashboardPageHeaderTitle className={themeStyles.styles.text}>
           Visualizando Link: {data.slug}
         </DashboardPageHeaderTitle>
       </DashboardPageHeader>
       <DashboardPageMain className="py-12">
         <Card
-          className={`bg-background/90 mx-auto w-full shadow-xl backdrop-blur-lg transition-all hover:shadow-2xl lg:max-w-md ${themeStyles.background} ${themeStyles.text}`}
+          className={`bg-background/90 mx-auto w-full shadow-xl backdrop-blur-lg transition-all hover:shadow-2xl lg:max-w-md ${themeStyles.styles.background} ${themeStyles.styles.text}`}
         >
           <CardHeader className="relative pt-16 pb-0">
             <div className="absolute top-4 left-4 z-10">
@@ -169,7 +129,9 @@ export default async function Page({
                       className="rounded-full"
                     >
                       <Link href="/app/links">
-                        <ArrowLeft className={`h-4 w-4 ${themeStyles.text}`} />
+                        <ArrowLeft
+                          className={`h-4 w-4 ${themeStyles.styles.text}`}
+                        />
                         <span className="sr-only">Voltar</span>
                       </Link>
                     </Button>
@@ -202,7 +164,7 @@ export default async function Page({
             <div className="mb-8 flex justify-center">
               <div className="relative">
                 <div
-                  className={`absolute -inset-1 rounded-full bg-gradient-to-r from-${themeStyles.avatarBg} to-${themeStyles.avatarBg} opacity-70 blur`}
+                  className={`absolute -inset-1 rounded-full bg-gradient-to-r ${themeStyles.styles.avatarBg} opacity-70 blur`}
                 ></div>
                 <Avatar className="border-primary/20 relative h-32 w-32 border shadow-sm">
                   {imageUrl ? (
@@ -219,7 +181,7 @@ export default async function Page({
                         className="object-cover"
                       />
                       <AvatarFallback
-                        className={`${themeStyles.avatarBg} text-3xl ${themeStyles.buttonText}`}
+                        className={`${themeStyles.styles.avatarBg} text-3xl ${themeStyles.styles.buttonText}`}
                       >
                         {data.user.name?.charAt(0).toUpperCase() ?? "U"}
                       </AvatarFallback>
@@ -230,22 +192,21 @@ export default async function Page({
             </div>
             <div className="mb-10 text-center">
               <div
-                className={`${themeStyles.nameBg} inline-block ${themeStyles.nameText} rounded-full px-4 py-1 text-sm font-medium ${themeStyles.buttonBg.replace(
-                  "bg-",
-                  "text-",
-                )}`}
+                className={`${themeStyles.styles.nameBg} inline-block ${themeStyles.styles.nameText} rounded-full px-4 py-1 text-sm font-medium`}
               >
                 @{data.user.name}
               </div>
             </div>
             <div className="mb-8 text-center">
               <h1
-                className={`mb-2 text-2xl font-bold tracking-tight ${themeStyles.text}`}
+                className={`mb-2 text-2xl font-bold tracking-tight ${themeStyles.styles.text}`}
               >
                 {data.title}
               </h1>
               {data.description && (
-                <p className={`mx-auto max-w-xs ${themeStyles.mutedText}`}>
+                <p
+                  className={`mx-auto max-w-xs ${themeStyles.styles.mutedText}`}
+                >
                   {data.description}
                 </p>
               )}
@@ -254,7 +215,7 @@ export default async function Page({
             <div className="space-y-3">
               {socialLinks.length > 0 ? (
                 socialLinks.map((link, index) => {
-                  const platform = detectPlatform(link.url);
+                  const platform = detectPlatform(link.url); // Função suposta para detectar a plataforma
                   const { icon } =
                     platformIcons[platform] || platformIcons.other;
                   const clickCount =
@@ -264,13 +225,13 @@ export default async function Page({
                   return (
                     <div key={index} className="group relative">
                       <p
-                        className={`text-xs ${themeStyles.mutedText} mb-1 text-end`}
+                        className={`text-xs ${themeStyles.styles.mutedText} mb-1 text-end`}
                       >
                         Cliques: {clickCount}
                       </p>
                       <Button
                         variant="bio"
-                        className={`h-12 w-full rounded-xl shadow-md transition-all duration-300 ${themeStyles.buttonBg} ${themeStyles.buttonText}`}
+                        className={`h-12 w-full rounded-xl shadow-md transition-all duration-300 ${themeStyles.styles.buttonBg} ${themeStyles.styles.buttonText}`}
                       >
                         <Link
                           href={link.url}
@@ -289,10 +250,10 @@ export default async function Page({
                 })
               ) : (
                 <div
-                  className={`flex flex-col items-center justify-center rounded-xl px-4 py-12 text-center ${themeStyles.mutedText}`}
+                  className={`flex flex-col items-center justify-center rounded-xl px-4 py-12 text-center ${themeStyles.styles.mutedText}`}
                 >
                   <Globe
-                    className={`mb-4 h-12 w-12 ${themeStyles.mutedText}`}
+                    className={`mb-4 h-12 w-12 ${themeStyles.styles.mutedText}`}
                   />
                   <p className="font-medium">Nenhum link social disponível</p>
                   <p className="mt-2 text-sm">
@@ -303,15 +264,19 @@ export default async function Page({
             </div>
           </CardContent>
           <CardFooter
-            className={`flex justify-center pt-6 pb-8 ${themeStyles.mutedText}`}
+            className={`flex justify-center pt-6 pb-8 ${themeStyles.styles.mutedText}`}
           >
             <div className="text-center">
               <div className="mb-2 flex items-center justify-center gap-1">
                 <span className="text-xs font-medium">Feito com</span>
-                <span className={`font-semibold ${themeStyles.nameText}`}>
+                <span
+                  className={`font-semibold ${themeStyles.styles.nameText}`}
+                >
                   ♥
                 </span>
-                <span className={`font-semibold ${themeStyles.nameText}`}>
+                <span
+                  className={`font-semibold ${themeStyles.styles.nameText}`}
+                >
                   SYNC
                 </span>
               </div>
