@@ -269,14 +269,10 @@ export default async function Page({
             <div className="text-center">
               <div className="mb-2 flex items-center justify-center gap-1">
                 <span className="text-xs font-medium">Feito com</span>
-                <span
-                  className={`font-semibold ${themeStyles.styles.nameText}`}
-                >
+                <span className={`font-semibold ${themeStyles.styles.text}`}>
                   ♥
                 </span>
-                <span
-                  className={`font-semibold ${themeStyles.styles.nameText}`}
-                >
+                <span className={`font-semibold ${themeStyles.styles.text}`}>
                   SYNC
                 </span>
               </div>

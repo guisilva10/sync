@@ -70,6 +70,9 @@ export default async function Page({
           <CardContent className="pt-12">
             <div className="mb-8 flex justify-center">
               <div className="relative">
+                <div
+                  className={`absolute -inset-1 rounded-full bg-gradient-to-r ${themeStyles.styles.avatarBg} opacity-70 blur`}
+                ></div>
                 <Avatar className="relative h-32 w-32 border shadow-sm">
                   {imageUrl ? (
                     <AvatarImage
@@ -140,14 +143,10 @@ export default async function Page({
             <div className="text-center">
               <div className="mb-2 flex items-center justify-center gap-1">
                 <span className="text-xs font-medium">Feito com</span>
-                <span
-                  className={`font-semibold ${themeStyles.styles.nameText}`}
-                >
+                <span className={`font-semibold ${themeStyles.styles.text}`}>
                   ♥
                 </span>
-                <span
-                  className={`font-semibold ${themeStyles.styles.nameText}`}
-                >
+                <span className={`font-semibold ${themeStyles.styles.text}`}>
                   SYNC
                 </span>
               </div>
