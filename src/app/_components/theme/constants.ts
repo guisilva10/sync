@@ -2,7 +2,7 @@ export const themes = {
   light: [
     {
       value: "light-normal",
-      label: "Azul Claro",
+      label: "Claro",
       styles: {
         background: "bg-white",
         text: "text-black",
