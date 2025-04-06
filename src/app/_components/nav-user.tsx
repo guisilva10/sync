@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  BadgeCheck,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-  Sparkles,
-} from "lucide-react";
+import { BadgeCheck, ChevronsUpDown, CreditCard, LogOut } from "lucide-react";
 
 import {
   Avatar,
@@ -85,14 +79,7 @@ export function NavUser({ user }: UserDropdownProps) {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Link className="flex items-center" href="/app/billing">
-                  <Sparkles />
-                  Upgrade to Pro
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
+
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
