@@ -27,6 +27,7 @@ import {
   Github,
   Globe,
   Loader2,
+  PaperclipIcon,
 } from "lucide-react";
 import { useState } from "react";
 import {
@@ -52,6 +53,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { uploadImage } from "@/services/supabase/actions";
 import Loading from "../loading";
+import { FaWhatsapp } from "react-icons/fa";
 
 interface SocialLink {
   id: number;
@@ -78,6 +80,8 @@ const platformIcons: Record<string, React.ReactNode> = {
   facebook: <Facebook className="h-5 w-5" />,
   linkedin: <Linkedin className="h-5 w-5" />,
   github: <Github className="h-5 w-5" />,
+  whatsapp: <FaWhatsapp className="h-5 w-5" />,
+  portfolio: <PaperclipIcon className="h-5 w-5" />,
   other: <Globe className="h-5 w-5" />,
 };
 
@@ -88,6 +92,8 @@ const availablePlatforms = [
   { value: "facebook", label: "Facebook" },
   { value: "linkedin", label: "LinkedIn" },
   { value: "github", label: "GitHub" },
+  { value: "whatsapp", label: "Whatsapp" },
+  { value: "portfolio", label: "Portfólio" },
   { value: "other", label: "Outro Link" },
 ];
 

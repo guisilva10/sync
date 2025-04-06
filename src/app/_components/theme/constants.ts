@@ -58,7 +58,7 @@ export const themes = {
     },
     {
       value: "light-orange",
-      label: "Roxo Claro",
+      label: "Laranja Claro",
       styles: {
         background: "bg-white",
         text: "text-black",

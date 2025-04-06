@@ -13,7 +13,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/app/_components/ui/card";
@@ -35,7 +34,9 @@ import {
   Github,
   Globe,
   Loader2,
+  PaperclipIcon,
 } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import { useState } from "react";
 import {
   Tooltip,
@@ -79,6 +80,8 @@ const platformIcons: Record<string, React.ReactNode> = {
   facebook: <Facebook className="h-5 w-5" />,
   linkedin: <Linkedin className="h-5 w-5" />,
   github: <Github className="h-5 w-5" />,
+  whatsapp: <FaWhatsapp className="h-5 w-5" />,
+  portfolio: <PaperclipIcon className="h-5 w-5" />,
   other: <Globe className="h-5 w-5" />,
 };
 
@@ -89,6 +92,8 @@ const availablePlatforms = [
   { value: "facebook", label: "Facebook" },
   { value: "linkedin", label: "LinkedIn" },
   { value: "github", label: "GitHub" },
+  { value: "whatsapp", label: "Whatsapp" },
+  { value: "portfolio", label: "Portfólio" },
   { value: "other", label: "Outro Link" },
 ];
 
@@ -502,92 +507,109 @@ export default function LinkInBioPage() {
                 ))}
               </CardContent>
             </Card>
-
-            <Card>
-              <CardFooter className="flex justify-end p-4">
-                <Button
-                  onClick={saveData}
-                  className="flex items-center gap-2"
-                  disabled={isLoading || !userId}
-                >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Salvando...
-                    </>
-                  ) : (
-                    <>
-                      Salvar Link na Bio
-                      <Check className="h-4 w-4" />
-                    </>
-                  )}
-                </Button>
-              </CardFooter>
-            </Card>
           </div>
 
           {/* Preview do Link na Bio */}
           <div className="h-fit lg:sticky lg:top-6">
             <Card className="h-fit">
               <CardHeader>
-                <div className="mb-2 flex items-center space-x-2">
+                <div className="mb-2 flex items-center justify-between space-x-2">
                   <ExternalLink className="h-6 w-6" />
                   <CardTitle>Prévia do Link na Bio</CardTitle>
+                  <Button
+                    onClick={saveData}
+                    className="flex items-center gap-2"
+                    disabled={isLoading || !userId}
+                  >
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Salvando...
+                      </>
+                    ) : (
+                      <>
+                        Salvar Link na Bio
+                        <Check className="h-4 w-4" />
+                      </>
+                    )}
+                  </Button>
                 </div>
                 <CardDescription>
                   Veja como seu Link na Bio ficará para seus visitantes.
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div
-                  className={`mx-auto max-w-md overflow-hidden rounded-lg border border-gray-200 shadow-md ${selectedTheme.styles.background} ${selectedTheme.styles.text}`}
-                >
-                  <div className="px-6 py-8 text-center">
-                    {imageFile ? (
-                      <img
-                        src={URL.createObjectURL(imageFile)}
-                        alt="Prévia da imagem"
-                        className="mx-auto mb-4 h-24 w-24 rounded-full object-cover"
-                      />
-                    ) : (
-                      <div
-                        className={`${selectedTheme.styles.avatarBg} mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full ${selectedTheme.styles.buttonText}`}
-                      >
-                        {linkData.title.charAt(0).toUpperCase() || "S"}
-                      </div>
-                    )}
-                    <h2
-                      className={`mb-2 text-xl font-bold ${selectedTheme.styles.text}`}
+                {/* Container do mockup do celular */}
+                <div className="relative mx-auto mt-4">
+                  {/* Frame do celular */}
+                  <div className="relative mx-auto max-w-md overflow-hidden rounded-[40px] bg-black p-3 shadow-xl">
+                    {/* Notch do celular */}
+                    <div className="absolute top-0 left-1/2 z-10 h-7 w-1/3 -translate-x-1/2 rounded-b-3xl bg-black"></div>
+
+                    {/* Botão de volume */}
+                    <div className="absolute top-20 -left-1 h-16 w-1 rounded-l-lg bg-gray-700"></div>
+
+                    {/* Botão de energia */}
+                    <div className="absolute top-24 -right-1 h-12 w-1 rounded-r-lg bg-gray-700"></div>
+
+                    {/* Tela do celular - Seu conteúdo atual */}
+                    <div
+                      className={`mx-auto overflow-hidden rounded-[32px] border-[8px] border-black shadow-md ${selectedTheme.styles.background} ${selectedTheme.styles.text}`}
                     >
-                      {linkData.title || "Seu Nome ou Marca"}
-                    </h2>
-                    <p className={`mb-6 ${selectedTheme.styles.mutedText}`}>
-                      {linkData.description || "Sua descrição aparecerá aqui"}
-                    </p>
-                    <div className="mt-6 space-y-3">
-                      {socialLinks.length > 0 ? (
-                        socialLinks.map((link) => (
+                      <div className="px-6 py-8 text-center">
+                        {imageFile ? (
+                          <img
+                            src={URL.createObjectURL(imageFile)}
+                            alt="Prévia da imagem"
+                            className="mx-auto mb-4 h-24 w-24 rounded-full object-cover"
+                          />
+                        ) : (
                           <div
-                            key={link.id}
-                            className={`${selectedTheme.styles.buttonBg} flex cursor-pointer items-center justify-center gap-2 rounded-md px-4 py-3 transition-colors`}
+                            className={`${selectedTheme.styles.avatarBg} mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full ${selectedTheme.styles.buttonText}`}
                           >
-                            <Link href={link.url} className="mb-2">
-                              <span
-                                className={`flex items-center gap-2 ${selectedTheme.styles.buttonText}`}
-                              >
-                                {platformIcons[link.platform]}
-                                <span className="font-medium">
-                                  {link.title}
-                                </span>
-                              </span>
-                            </Link>
+                            {linkData.title.charAt(0).toUpperCase() || "S"}
                           </div>
-                        ))
-                      ) : (
-                        <div className="rounded-md bg-gray-100 px-4 py-3 text-center text-gray-400">
-                          Adicione links para aparecerem aqui
+                        )}
+                        <h2
+                          className={`mb-2 text-xl font-bold ${selectedTheme.styles.text}`}
+                        >
+                          {linkData.title || "Seu Nome ou Marca"}
+                        </h2>
+                        <p className={`mb-6 ${selectedTheme.styles.mutedText}`}>
+                          {linkData.description ||
+                            "Sua descrição aparecerá aqui"}
+                        </p>
+                        <div className="mt-6 space-y-3">
+                          {socialLinks.length > 0 ? (
+                            socialLinks.map((link) => (
+                              <div
+                                key={link.id}
+                                className={`${selectedTheme.styles.buttonBg} flex cursor-pointer items-center justify-center gap-2 rounded-md px-4 py-3 transition-colors`}
+                              >
+                                <Link href={link.url} className="mb-2">
+                                  <span
+                                    className={`flex items-center gap-2 ${selectedTheme.styles.buttonText}`}
+                                  >
+                                    {platformIcons[link.platform]}
+                                    <span className="font-medium">
+                                      {link.title}
+                                    </span>
+                                  </span>
+                                </Link>
+                              </div>
+                            ))
+                          ) : (
+                            <div className="rounded-md bg-gray-100 px-4 py-3 text-center text-gray-400">
+                              Adicione links para aparecerem aqui
+                            </div>
+                          )}
                         </div>
-                      )}
+                      </div>
+                    </div>
+
+                    {/* Barra de home na parte inferior */}
+                    <div className="mt-2 flex justify-center pb-1">
+                      <div className="h-1 w-16 rounded-full bg-gray-700"></div>
                     </div>
                   </div>
                 </div>

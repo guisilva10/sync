@@ -9,7 +9,9 @@ import {
   Linkedin,
   Github,
   Globe,
+  PaperclipIcon,
 } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 
 // Tipagem das props
 interface SocialLinksClientProps {
@@ -29,6 +31,8 @@ const platformStyles: Record<string, { icon: ReactNode }> = {
   facebook: { icon: <Facebook className="h-5 w-5" /> },
   linkedin: { icon: <Linkedin className="h-5 w-5" /> },
   github: { icon: <Github className="h-5 w-5" /> },
+  whatsapp: { icon: <FaWhatsapp className="h-5 w-5" /> },
+  portfolio: { icon: <PaperclipIcon className="h-5 w-5" /> },
   other: { icon: <Globe className="h-5 w-5" /> },
 };
 
@@ -39,6 +43,8 @@ const detectPlatform = (url: string): string => {
   if (url.includes("facebook.com")) return "facebook";
   if (url.includes("linkedin.com")) return "linkedin";
   if (url.includes("github.com")) return "github";
+  if (url.includes("whatsapp.com")) return "whatsapp";
+  if (url.includes("")) return "portfolio";
   return "other";
 };
 

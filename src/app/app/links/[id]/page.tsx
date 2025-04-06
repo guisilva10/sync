@@ -14,6 +14,7 @@ import {
   Github,
   Globe,
   ArrowLeft,
+  PaperclipIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { getLinkById } from "../new/actions";
@@ -38,6 +39,7 @@ import {
 import { supabase } from "@/services/supabase/index";
 import { VisualizeButton } from "../(main)/_components/visualize-button";
 import { themes } from "@/app/_components/theme/constants";
+import { FaWhatsapp } from "react-icons/fa";
 
 const platformIcons: Record<string, { icon: React.ReactNode }> = {
   instagram: { icon: <Instagram className="h-5 w-5" /> },
@@ -46,6 +48,8 @@ const platformIcons: Record<string, { icon: React.ReactNode }> = {
   facebook: { icon: <Facebook className="h-5 w-5" /> },
   linkedin: { icon: <Linkedin className="h-5 w-5" /> },
   github: { icon: <Github className="h-5 w-5" /> },
+  whatsapp: { icon: <FaWhatsapp className="h-5 w-5" /> },
+  portfolio: { icon: <PaperclipIcon className="h-5 w-5" /> },
   other: { icon: <Globe className="h-5 w-5" /> },
 };
 
@@ -56,6 +60,8 @@ const detectPlatform = (url: string): string => {
   if (url.includes("facebook.com")) return "facebook";
   if (url.includes("linkedin.com")) return "linkedin";
   if (url.includes("github.com")) return "github";
+  if (url.includes("whatsapp.com")) return "whatsapp";
+  if (url.includes("")) return "portfolio"; // Assuming 'portfolio' is a keyword in the URL for portfolio links
   return "other";
 };
 
