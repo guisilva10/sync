@@ -26,6 +26,7 @@ import {
   Github,
   Loader2,
   PaperclipIcon,
+  X,
 } from "lucide-react";
 import { useState } from "react";
 import {
@@ -191,6 +192,7 @@ export function EditLinkForm({ id, initialData }: EditLinkFormProps) {
         toast({
           title: "Sucesso!",
           description: "Seu Link na Bio foi atualizado com sucesso.",
+          action: <Check className="size-4 text-emerald-500" />,
         });
 
         router.push("/app/links");
@@ -199,6 +201,7 @@ export function EditLinkForm({ id, initialData }: EditLinkFormProps) {
           title: "Erro",
           description: "Ocorreu um erro ao atualizar seus dados.",
           variant: "destructive",
+          action: <X className="size-4 text-red-500" />,
         });
         console.error("Erro ao atualizar:", error);
       } finally {

@@ -35,6 +35,7 @@ import {
   Globe,
   Loader2,
   PaperclipIcon,
+  X,
 } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { useState } from "react";
@@ -195,6 +196,7 @@ export default function LinkInBioPage() {
         toast({
           title: "Sucesso!",
           description: "Seu Link na Bio foi salvo com sucesso.",
+          action: <Check className="size-4 text-emerald-500" />,
         });
 
         setLinkData(initialLinkData);
@@ -207,6 +209,7 @@ export default function LinkInBioPage() {
           title: "Erro",
           description: "Ocorreu um erro ao salvar seus dados.",
           variant: "destructive",
+          action: <X className="size-4 text-red-500" />,
         });
         console.error("Erro ao salvar:", error);
       } finally {

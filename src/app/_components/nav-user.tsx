@@ -83,8 +83,10 @@ export function NavUser({ user }: UserDropdownProps) {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
-                <BadgeCheck />
-                Account
+                <Link className="flex items-center" href="/app/account">
+                  <BadgeCheck className="mr-2" />
+                  Account
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Link className="flex items-center" href="/app/billing">
