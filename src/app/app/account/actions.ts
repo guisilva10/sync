@@ -23,7 +23,6 @@ export async function updateProfile(
     },
     data: {
       name: input.name,
-      email: input.email,
     },
   });
 }
