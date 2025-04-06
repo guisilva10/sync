@@ -86,8 +86,7 @@ export function ProfileForm({ defaultValues }: ProfileFormProps) {
           <CardHeader>
             <CardTitle>Email</CardTitle>
             <CardDescription>
-              Entre em contato com contatotaskly@gmail.com para alterar seu
-              e-mail.
+              Insira um novo email, ou permaneça com este.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -98,7 +97,7 @@ export function ProfileForm({ defaultValues }: ProfileFormProps) {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="Digite seu email" readOnly {...field} />
+                    <Input placeholder="Digite seu email" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
