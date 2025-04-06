@@ -60,7 +60,7 @@ export default async function Page() {
                   antecipado quando for lançada.
                 </p>
                 <Button asChild variant="default" size="sm" className="mt-1">
-                  <Link href="/app/plans">Ver planos disponíveis</Link>
+                  <Link href="/app/billing">Ver planos disponíveis</Link>
                 </Button>
               </div>
             )}

@@ -44,7 +44,7 @@ export default async function Page() {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Link
-                    href="/app/plans"
+                    href="/app/billing"
                     className="text-primary text-sm underline underline-offset-4"
                   >
                     <Badge
