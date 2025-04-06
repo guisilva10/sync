@@ -6,7 +6,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/app/_components/ui/card";
@@ -25,7 +24,6 @@ import {
   Facebook,
   Linkedin,
   Github,
-  Globe,
   Loader2,
   PaperclipIcon,
 } from "lucide-react";
@@ -82,7 +80,7 @@ const platformIcons: Record<string, React.ReactNode> = {
   github: <Github className="h-5 w-5" />,
   whatsapp: <FaWhatsapp className="h-5 w-5" />,
   portfolio: <PaperclipIcon className="h-5 w-5" />,
-  other: <Globe className="h-5 w-5" />,
+  other: <PaperclipIcon className="h-5 w-5" />,
 };
 
 const availablePlatforms = [
@@ -471,37 +469,32 @@ export function EditLinkForm({ id, initialData }: EditLinkFormProps) {
                 ))}
               </CardContent>
             </Card>
-
-            <Card>
-              <CardFooter className="flex justify-end p-4">
-                <Button
-                  onClick={handleSubmit}
-                  className="flex items-center gap-2"
-                  disabled={isLoading || !userId}
-                >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      Salvando...
-                    </>
-                  ) : (
-                    <>
-                      Salvar Alterações
-                      <Check className="h-4 w-4" />
-                    </>
-                  )}
-                </Button>
-              </CardFooter>
-            </Card>
           </div>
 
           {/* Preview do Link na Bio */}
           <div className="h-fit lg:sticky lg:top-6">
             <Card className="h-fit">
               <CardHeader>
-                <div className="mb-2 flex items-center space-x-2">
+                <div className="mb-2 flex items-center justify-between space-x-2">
                   <LinkIcon className="h-6 w-6" />
                   <CardTitle>Prévia do Link na Bio</CardTitle>
+                  <Button
+                    onClick={handleSubmit}
+                    className="flex items-center gap-2"
+                    disabled={isLoading || !userId}
+                  >
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Salvando...
+                      </>
+                    ) : (
+                      <>
+                        Salvar Alterações
+                        <Check className="h-4 w-4" />
+                      </>
+                    )}
+                  </Button>
                 </div>
                 <CardDescription>
                   Veja como seu Link na Bio ficará para seus visitantes.
