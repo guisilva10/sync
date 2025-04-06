@@ -1,5 +1,6 @@
 "use client";
-import { Button } from "@/app/_components/ui/button";
+
+import Link from "next/link";
 
 import { ReactNode } from "react";
 
@@ -26,16 +27,17 @@ export function SocialLinkButton({
 }: SocialLinkButtonProps) {
   return (
     <div className="group">
-      <Button
+      <Link
+        href={url}
         className={`flex h-12 w-full items-center rounded-full ${themeStyles.buttonBg} ${themeStyles.buttonText}`}
-        variant="bio"
         onClick={() => onClick(linkId, url)}
+        target="_blank"
       >
         <div className="flex w-full items-center justify-center gap-x-3">
           <div>{icon}</div>
           <span>{title}</span>
         </div>
-      </Button>
+      </Link>
     </div>
   );
 }

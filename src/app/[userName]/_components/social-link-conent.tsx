@@ -64,14 +64,11 @@ async function handleClick(linkId: string, url: string) {
 
     const data = await response.json();
     if (data.success && data.redirect) {
-      window.location.href = data.redirect;
     } else {
       console.error("Erro na resposta da API:", data.error);
-      window.location.href = url; // Fallback
     }
   } catch (error) {
     console.error("Erro ao registrar clique:", error);
-    window.location.href = url; // Redireciona mesmo em caso de erro
   }
 }
 
