@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { Button } from "@/app/_components/ui/button";
@@ -10,6 +11,12 @@ import {
   SheetTrigger,
 } from "@/app/_components/ui/sheet";
 import { Label } from "@/app/_components/ui/label";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/app/_components/ui/tabs";
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -17,14 +24,7 @@ import { useToast } from "@/app/_components/ui/use-toast";
 import { updateLinkTheme } from "@/app/app/links/new/actions";
 import { RadioGroup, RadioGroupItem } from "@/app/_components/ui/radio-group";
 import Link from "next/link";
-
-// Definição dos temas disponíveis
-const themes = [
-  { value: "light", label: "Claro", className: "bg-white text-black" },
-  { value: "dark", label: "Escuro", className: "bg-gray-900 text-white" },
-  { value: "blue", label: "Azul", className: "bg-blue-500 text-white" },
-  { value: "green", label: "Verde", className: "bg-green-500 text-white" },
-];
+import { themes } from "@/app/_components/theme/constants";
 
 interface ThemeEditorSheetProps {
   linkId: string;
@@ -38,7 +38,10 @@ export function ThemeEditorSheet({
   hasSubscription,
 }: ThemeEditorSheetProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedTheme, setSelectedTheme] = useState(currentTheme || "light");
+  const [selectedTheme, setSelectedTheme] = useState(
+    currentTheme || "light-normal",
+  );
+  const [activeTab, setActiveTab] = useState("light");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
@@ -67,12 +70,22 @@ export function ThemeEditorSheet({
     }
   };
 
+  // Encontrar qual categoria (light/dark) contém o tema atual
+  const findActiveTabFromTheme = () => {
+    if (!currentTheme) return "light";
+
+    if (currentTheme.startsWith("light-")) return "light";
+    if (currentTheme.startsWith("dark-")) return "dark";
+
+    return "light"; // Padrão para light se não encontrar
+  };
+
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button>Editar Tema</Button>
+        <Button variant="outline">Editar Tema</Button>
       </SheetTrigger>
-      <SheetContent>
+      <SheetContent className="sm:max-w-md">
         <SheetHeader>
           <SheetTitle>Editar Tema</SheetTitle>
           <SheetDescription>Personalize o tema do seu link.</SheetDescription>
@@ -80,26 +93,93 @@ export function ThemeEditorSheet({
         <div className="mt-4 space-y-6">
           {hasSubscription ? (
             <>
-              <RadioGroup
-                value={selectedTheme}
-                onValueChange={setSelectedTheme}
-                className="space-y-2"
+              <Tabs
+                defaultValue={findActiveTabFromTheme()}
+                onValueChange={setActiveTab}
               >
-                {themes.map((theme) => (
-                  <div
-                    key={theme.value}
-                    className="flex items-center space-x-2"
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="light">Claro</TabsTrigger>
+                  <TabsTrigger value="dark">Escuro</TabsTrigger>
+                </TabsList>
+                <TabsContent value="light" className="mt-4">
+                  <RadioGroup
+                    value={selectedTheme}
+                    onValueChange={setSelectedTheme}
+                    className="grid grid-cols-1 gap-3"
                   >
-                    <RadioGroupItem value={theme.value} id={theme.value} />
-                    <Label htmlFor={theme.value} className="flex items-center">
-                      <span
-                        className={`mr-2 h-5 w-5 rounded-full ${theme.className}`}
-                      />
-                      {theme.label}
-                    </Label>
-                  </div>
-                ))}
-              </RadioGroup>
+                    {themes.light.map((theme) => (
+                      <div
+                        key={theme.value}
+                        className="hover:bg-accent relative flex items-center rounded-md border p-3"
+                      >
+                        <RadioGroupItem
+                          value={theme.value}
+                          id={theme.value}
+                          className="sr-only"
+                        />
+                        <Label
+                          htmlFor={theme.value}
+                          className="flex flex-1 cursor-pointer items-center justify-between"
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="flex gap-1">
+                              <div
+                                className={`h-6 w-6 rounded-full ${theme.styles.buttonBg}`}
+                              ></div>
+                              <div
+                                className={`h-6 w-6 rounded-full ${theme.styles.nameBg}`}
+                              ></div>
+                            </div>
+                            <span>{theme.label}</span>
+                          </div>
+                          <div
+                            className={`h-4 w-4 rounded-full ${selectedTheme === theme.value ? "bg-primary" : "bg-muted"}`}
+                          ></div>
+                        </Label>
+                      </div>
+                    ))}
+                  </RadioGroup>
+                </TabsContent>
+                <TabsContent value="dark" className="mt-4">
+                  <RadioGroup
+                    value={selectedTheme}
+                    onValueChange={setSelectedTheme}
+                    className="grid grid-cols-1 gap-3"
+                  >
+                    {themes.dark.map((theme) => (
+                      <div
+                        key={theme.value}
+                        className="hover:bg-accent relative flex items-center rounded-md border p-3"
+                      >
+                        <RadioGroupItem
+                          value={theme.value}
+                          id={theme.value}
+                          className="sr-only"
+                        />
+                        <Label
+                          htmlFor={theme.value}
+                          className="flex flex-1 cursor-pointer items-center justify-between"
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="flex gap-1">
+                              <div
+                                className={`h-6 w-6 rounded-full ${theme.styles.buttonBg}`}
+                              ></div>
+                              <div
+                                className={`h-6 w-6 rounded-full ${theme.styles.nameBg}`}
+                              ></div>
+                            </div>
+                            <span>{theme.label}</span>
+                          </div>
+                          <div
+                            className={`h-4 w-4 rounded-full ${selectedTheme === theme.value ? "bg-primary" : "bg-muted"}`}
+                          ></div>
+                        </Label>
+                      </div>
+                    ))}
+                  </RadioGroup>
+                </TabsContent>
+              </Tabs>
               <Button
                 onClick={handleSaveTheme}
                 disabled={isSubmitting}
@@ -115,7 +195,7 @@ export function ThemeEditorSheet({
                 plano de assinatura ativo.
               </p>
               <Button asChild>
-                <Link href="/app/billing">Ver Planos</Link>
+                <Link href="/app/plans">Ver Planos</Link>
               </Button>
             </div>
           )}
