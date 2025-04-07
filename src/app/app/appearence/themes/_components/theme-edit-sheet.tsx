@@ -83,7 +83,7 @@ export function ThemeEditorSheet({
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button variant="outline">Editar Tema</Button>
+        <Button>Editar Tema</Button>
       </SheetTrigger>
       <SheetContent className="overflow-y-auto px-4 sm:max-w-md">
         <SheetHeader>
