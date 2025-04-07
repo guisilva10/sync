@@ -28,7 +28,7 @@ import {
   PaperclipIcon,
   X,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Tooltip,
   TooltipContent,
@@ -71,6 +71,22 @@ interface EditLinkFormProps {
     image?: string;
   };
 }
+
+const isCompleteUrl = (url: string): boolean => {
+  return url.startsWith("http://") || url.startsWith("https://");
+};
+
+// Função para construir a URL completa da imagem
+const getFullImageUrl = (imagePath: string): string => {
+  // Se já for uma URL completa, retorna como está
+  if (isCompleteUrl(imagePath)) {
+    return imagePath;
+  }
+
+  // Caso contrário, constrói a URL completa para o Supabase Storage
+  // Ajuste este caminho base conforme sua configuração
+  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/images/${imagePath}`;
+};
 
 const platformIcons: Record<string, React.ReactNode> = {
   instagram: <Instagram className="h-5 w-5" />,
@@ -123,6 +139,21 @@ export function EditLinkForm({ id, initialData }: EditLinkFormProps) {
   }>({});
   const [isLoading, setIsLoading] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
+  const [imageError, setImageError] = useState<boolean>(false);
+
+  // Efeito para definir a URL da imagem inicial quando o componente é montado
+  useEffect(() => {
+    if (initialData.image) {
+      try {
+        const fullImageUrl = getFullImageUrl(initialData.image);
+        setImagePreviewUrl(fullImageUrl);
+      } catch (error) {
+        console.error("Erro ao gerar URL da imagem:", error);
+        setImageError(true);
+      }
+    }
+  }, [initialData.image]);
 
   // Verifica autenticação
   if (status === "loading") {
@@ -160,7 +191,12 @@ export function EditLinkForm({ id, initialData }: EditLinkFormProps) {
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setImageFile(e.target.files[0]);
+      const file = e.target.files[0];
+      setImageFile(file);
+      setImageError(false);
+      // Criar URL para visualização da imagem
+      const fileUrl = URL.createObjectURL(file);
+      setImagePreviewUrl(fileUrl);
     }
   };
 
@@ -296,9 +332,20 @@ export function EditLinkForm({ id, initialData }: EditLinkFormProps) {
                       Imagem selecionada: {imageFile.name}
                     </p>
                   ) : linkData.image ? (
-                    <p className="text-muted-foreground text-sm">
-                      Imagem atual: {linkData.image}
-                    </p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-muted-foreground text-sm">
+                        Imagem atual:{" "}
+                        {linkData.image.split("/").pop() || linkData.image}
+                      </p>
+                      {imagePreviewUrl && !imageError && (
+                        <img
+                          src={imagePreviewUrl}
+                          alt="Miniatura"
+                          className="h-6 w-6 rounded object-cover"
+                          onError={() => setImageError(true)}
+                        />
+                      )}
+                    </div>
                   ) : null}
                 </div>
 
@@ -508,17 +555,15 @@ export function EditLinkForm({ id, initialData }: EditLinkFormProps) {
                   className={`mx-auto max-w-md overflow-hidden rounded-lg border border-gray-200 bg-white text-black shadow-md`}
                 >
                   <div className="px-6 py-8 text-center">
-                    {imageFile ? (
+                    {imagePreviewUrl && !imageError ? (
                       <img
-                        src={URL.createObjectURL(imageFile)}
-                        alt="Prévia da imagem"
+                        src={imagePreviewUrl}
+                        alt="Imagem do perfil"
                         className="mx-auto mb-4 h-24 w-24 rounded-full object-cover"
-                      />
-                    ) : linkData.image ? (
-                      <img
-                        src={linkData.image}
-                        alt="Imagem do link"
-                        className="mx-auto mb-4 h-24 w-24 rounded-full object-cover"
+                        onError={() => {
+                          console.log("Erro ao carregar imagem");
+                          setImageError(true);
+                        }}
                       />
                     ) : (
                       <div
