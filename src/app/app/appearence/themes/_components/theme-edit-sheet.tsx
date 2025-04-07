@@ -70,7 +70,7 @@ export function ThemeEditorSheet({
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
-        <Button variant="outline">Editar Tema</Button>
+        <Button>Editar Tema</Button>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
@@ -115,7 +115,7 @@ export function ThemeEditorSheet({
                 plano de assinatura ativo.
               </p>
               <Button asChild>
-                <Link href="/app/plans">Ver Planos</Link>
+                <Link href="/app/billing">Ver Planos</Link>
               </Button>
             </div>
           )}

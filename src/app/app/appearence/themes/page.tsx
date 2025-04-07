@@ -19,7 +19,7 @@ import {
 } from "@/app/_components/ui/tooltip";
 
 import Link from "next/link";
-import { PlusIcon, ExternalLinkIcon, InfoIcon } from "lucide-react";
+import { PlusIcon, ExternalLinkIcon, InfoIcon, PencilIcon } from "lucide-react";
 import { getLinksByUser } from "../../actions";
 import { ThemeEditorSheet } from "./_components/theme-edit-sheet";
 import { formatDistanceToNow } from "date-fns";
@@ -47,10 +47,7 @@ export default async function Page() {
                     href="/app/billing"
                     className="text-primary text-sm underline underline-offset-4"
                   >
-                    <Badge
-                      variant="outline"
-                      className="gap-1 border-amber-300 bg-amber-50 text-amber-700"
-                    >
+                    <Badge variant="outline" className="gap-1">
                       <InfoIcon className="size-3" />
                       Faça upgrade para mais recursos
                     </Badge>
@@ -143,8 +140,14 @@ export default async function Page() {
                     </div>
 
                     <div className="flex items-center justify-end gap-2">
-                      <Button variant="outline" size="sm" asChild>
-                        <Link href={`/app/links/${link.id}`}>Editar</Link>
+                      <Button variant="ghost" size="sm" asChild>
+                        <Link
+                          href={`/app/links/edit/${link.id}`}
+                          className="flex items-center"
+                        >
+                          Editar Link
+                          <PencilIcon className="ml-1 size-4" />
+                        </Link>
                       </Button>
                       <ThemeEditorSheet
                         linkId={link.id}

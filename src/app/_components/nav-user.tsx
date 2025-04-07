@@ -85,20 +85,20 @@ export function NavUser({ user }: UserDropdownProps) {
               <DropdownMenuItem>
                 <Link className="flex items-center" href="/app/account">
                   <BadgeCheck className="mr-2" />
-                  Account
+                  Minha conta
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Link className="flex items-center" href="/app/billing">
                   <CreditCard className="mr-2" />
-                  Billing
+                  Gerenciar Plano
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => signOut()}>
               <LogOut />
-              Log out
+              Sair da conta
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

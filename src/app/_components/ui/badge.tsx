@@ -16,13 +16,13 @@ const badgeVariants = cva(
         destructive:
           "border-transparent bg-destructive text-white [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/70",
         outline:
-          "text-primary bg-primary/10 border-primary [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
+          "text-primary bg-primary/20 py-1 [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
       },
     },
     defaultVariants: {
       variant: "default",
     },
-  }
+  },
 );
 
 function Badge({
