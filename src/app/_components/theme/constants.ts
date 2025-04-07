@@ -235,7 +235,7 @@ export const themes = {
         mutedText: "text-muted-foreground",
         buttonBg: "bg-gradient-to-r from-muted to-muted/80",
         nameBg: "bg-muted/80",
-        nameText: "text-gray-500",
+        nameText: "text-muted-foreground",
         buttonText: "text-white",
         avatarBg: "bg-gradient-to-br from-muted to-muted/80",
       },
