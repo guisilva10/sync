@@ -85,7 +85,7 @@ export function ThemeEditorSheet({
       <SheetTrigger asChild>
         <Button variant="outline">Editar Tema</Button>
       </SheetTrigger>
-      <SheetContent className="sm:max-w-md">
+      <SheetContent className="overflow-y-auto px-4 sm:max-w-md">
         <SheetHeader>
           <SheetTitle>Editar Tema</SheetTitle>
           <SheetDescription>Personalize o tema do seu link.</SheetDescription>
