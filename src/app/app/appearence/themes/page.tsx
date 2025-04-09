@@ -105,7 +105,7 @@ export default async function Page() {
                   key={link.id}
                   className="overflow-hidden transition-all hover:shadow-md"
                 >
-                  <CardContent className="grid grid-cols-3 gap-4 p-4">
+                  <CardContent className="flex flex-col justify-between gap-4 p-4 lg:flex-row">
                     <div className="flex flex-col">
                       <Link href={`/app/links/${link.id}`} className="group">
                         <span className="text-primary line-clamp-1 font-medium transition-colors group-hover:underline">
