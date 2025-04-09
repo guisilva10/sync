@@ -403,7 +403,6 @@ export function EditLinkForm({ id, initialData }: EditLinkFormProps) {
                   </div>
                   <Button
                     type="button"
-                    variant="outline"
                     size="sm"
                     onClick={addSocialLink}
                     className="flex items-center gap-1"

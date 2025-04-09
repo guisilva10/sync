@@ -120,7 +120,7 @@ export default async function Page() {
                       </Link>
                     </div>
 
-                    <div className="flex flex-col justify-center text-sm">
+                    <div className="hidden flex-col justify-center text-sm lg:flex">
                       <div className="flex items-center gap-2">
                         {link.createdAt && (
                           <span className="text-muted-foreground text-xs">
