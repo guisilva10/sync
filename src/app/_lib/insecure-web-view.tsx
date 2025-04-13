@@ -5,7 +5,9 @@ export function useInsecureBrowser() {
 
   useEffect(() => {
     const ua = navigator.userAgent || "";
-    const isWebView = /Instagram|FBAN|FBAV|TikTok|Messenger/i.test(ua);
+    const isWebView = /Instagram|FBAN|LinkedInApp|FBAV|TikTok|Messenger/i.test(
+      ua,
+    );
     setIsInsecure(isWebView);
   }, []);
 
