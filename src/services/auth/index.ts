@@ -28,6 +28,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       };
       return session;
     },
+    async redirect({ url, baseUrl }) {
+      // Evita redirecionar para webviews maliciosas
+      if (url.startsWith(baseUrl)) return url;
+      return baseUrl;
+    },
   },
   cookies: {
     sessionToken: {
