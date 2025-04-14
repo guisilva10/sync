@@ -16,6 +16,7 @@ import { TestimonialsMarquee } from "./_components/landingpage/testimonials-sect
 import FAQSection from "./_components/landingpage/faq-section";
 import CTASection from "./_components/landingpage/cta-section";
 import Footer from "./_components/landingpage/footer";
+import AcceptCookies from "./_components/landingpage/accept-cookies";
 
 export default function LandingPage() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -43,6 +44,7 @@ export default function LandingPage() {
 
   return (
     <>
+      <AcceptCookies />
       <div className="flex min-h-[100dvh] flex-col">
         <header
           className={`sticky top-0 z-50 w-full px-6 backdrop-blur-lg transition-all duration-300 ${

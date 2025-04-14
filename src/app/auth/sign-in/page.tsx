@@ -11,6 +11,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from "@/app/_components/ui/alert";
+import { FaGoogle } from "react-icons/fa";
 
 export default function LoginPage() {
   const isInsecure = useInsecureBrowser();
@@ -70,16 +71,12 @@ export default function LoginPage() {
 
           <div className="flex flex-col gap-y-4">
             <Button
-              variant="outline"
               className="flex h-12 w-full items-center justify-center gap-2 rounded-xl transition-colors"
               onClick={handleGoogleSignIn}
               disabled={isInsecure}
             >
-              <svg className="size-5" viewBox="0 0 24 24">
-                {/* Google SVG path aqui */}
-                {/* ... */}
-              </svg>
               <span>Continuar com Google</span>
+              <FaGoogle className="size-4" />
             </Button>
 
             {isInsecure && (
@@ -109,11 +106,17 @@ export default function LoginPage() {
           <div className="mt-8 text-center">
             <p className="text-muted-foreground text-sm">
               Ao continuar, você concorda com nossos{" "}
-              <Link href="#" className="text-primary hover:underline">
+              <Link
+                href="/terms-services"
+                className="text-primary hover:underline"
+              >
                 Termos de Serviço
               </Link>{" "}
               e{" "}
-              <Link href="#" className="text-primary hover:underline">
+              <Link
+                href="/privacy-policy"
+                className="text-primary hover:underline"
+              >
                 Política de Privacidade
               </Link>
             </p>
