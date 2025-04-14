@@ -3,7 +3,7 @@ import { getUrl } from "@/app/_lib/get-url";
 
 export function middleware(request: NextRequest) {
   const token = request.cookies.get(
-    process.env.SESSION_COOKIE_NAME || "authenticationjs.session-token"
+    process.env.SESSION_COOKIE_NAME || "authenticationjs.session-token",
   );
   const pathname = request.nextUrl.pathname;
 
@@ -21,5 +21,10 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  matcher: [
+    // Skip Next.js internals and all static files, unless found in search params
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    // Always run for API routes
+    "/(api|trpc)(.*)",
+  ],
 };
