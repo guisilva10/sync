@@ -58,7 +58,7 @@ export default function LoginPage() {
               <AlertTitle>Navegador não compatível</AlertTitle>
               <AlertDescription>
                 Parece que você está usando um navegador interno (como do
-                Instagram ou TikTok).
+                Instagram ou Linkedin).
                 <br />
                 <strong>
                   Toque nos 3 pontinhos e selecione &quot;Abrir no
