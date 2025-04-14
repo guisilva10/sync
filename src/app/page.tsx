@@ -117,9 +117,11 @@ export default function LandingPage() {
             >
               <div className="flex flex-col gap-4 py-4">
                 <div className="flex flex-col gap-2 border-t pt-2">
-                  <Button className="rounded-full">
-                    Comece Agora
-                    <ChevronRight className="ml-1 size-4" />
+                  <Button className="rounded-full" asChild>
+                    <Link href="/auth/sign-in" className="flex items-center">
+                      Comece Agora
+                      <ChevronRight className="ml-1 size-4" />
+                    </Link>
                   </Button>
                 </div>
               </div>
