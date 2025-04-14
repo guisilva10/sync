@@ -36,7 +36,7 @@ export default function HowItWorks() {
             viewport={{ once: true }}
             className="mb-4 text-3xl font-bold md:text-4xl"
           >
-            Como <span className="text-primary">Funciona</span>
+            Como <span className="text-primary">funciona</span>?
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}

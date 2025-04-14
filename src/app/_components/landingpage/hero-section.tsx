@@ -15,7 +15,7 @@ const HeroSection = () => {
           className="mx-auto max-w-5xl text-center"
         >
           <h1 className="from-foreground to-foreground/70 mb-6 bg-gradient-to-r bg-clip-text text-4xl font-bold tracking-tight text-transparent lg:text-8xl">
-            Crie Seu Link In Bio Personalizado com a{" "}
+            Crie seu Link In Bio personalizado com a{" "}
             <span className="text-primary font-bold">SYNC</span>
           </h1>
           <p className="text-muted-foreground mx-auto mb-8 max-w-2xl text-lg">

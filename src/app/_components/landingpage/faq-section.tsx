@@ -34,11 +34,6 @@ const faqs = [
     answer:
       "Nossa ferramenta de análise rastreia quantas pessoas visitam sua página e em quais links elas clicam. Você terá acesso a um painel detalhado com métricas como número de visitantes, taxa de cliques, localizações geográficas e dispositivos utilizados.",
   },
-  {
-    question: "Posso usar meu próprio domínio?",
-    answer:
-      "Sim, nos planos pagos você pode conectar seu próprio domínio personalizado à sua página SYNC, criando uma experiência ainda mais profissional e memorável para seus visitantes.",
-  },
 ];
 
 export default function FAQSection() {

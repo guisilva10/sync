@@ -19,8 +19,8 @@ export default function CTASection() {
           viewport={{ once: true }}
           className="mb-6 text-3xl font-bold md:text-5xl"
         >
-          Pronto para <span className="text-primary">Transformar</span> sua
-          Presença Online?
+          Pronto para <span className="text-primary">transformar</span> sua
+          presença online?
         </motion.h2>
         <motion.p
           initial={{ opacity: 0, y: 20 }}

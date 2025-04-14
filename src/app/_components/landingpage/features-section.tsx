@@ -62,8 +62,8 @@ export default function FeaturesSection() {
             viewport={{ once: true }}
             className="mb-4 text-3xl font-bold md:text-4xl"
           >
-            Recursos que <span className="text-primary">Transformam</span> sua
-            Presença Online
+            Recursos que <span className="text-primary">transformam</span> sua
+            presença online
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}

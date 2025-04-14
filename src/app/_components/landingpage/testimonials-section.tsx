@@ -122,7 +122,7 @@ export function TestimonialsMarquee() {
         viewport={{ once: true }}
         className="mb-4 text-3xl font-bold md:text-4xl"
       >
-        O que nossos <span className="text-primary">Clientes</span> Dizem
+        O que nossos <span className="text-primary">clientes</span> dizem?
       </motion.h2>
       <motion.p
         initial={{ opacity: 0, y: 20 }}
