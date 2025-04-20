@@ -95,35 +95,71 @@ export default async function Page() {
             </Card>
           ) : (
             <div className="space-y-3">
-              <div className="text-muted-foreground grid grid-cols-3 gap-4 px-4 py-2 text-sm font-medium">
-                <div>Link</div>
-                <div>Informações</div>
-                <div className="text-right">Ações</div>
-              </div>
               {links.map((link) => (
                 <Card
                   key={link.id}
-                  className="overflow-hidden transition-all hover:shadow-md"
+                  className={`overflow-hidden transition-all hover:shadow-md ${
+                    link.isPrimary ? "" : ""
+                  }`}
                 >
                   <CardContent className="flex flex-col justify-between gap-4 p-4 lg:flex-row">
                     <div className="flex flex-col">
-                      <Link href={`/app/links/${link.id}`} className="group">
-                        <span className="text-primary line-clamp-1 font-medium transition-colors group-hover:underline">
-                          {link.title || "Link sem título"}
-                        </span>
-                        <div className="text-muted-foreground mt-1 flex items-center gap-1 text-xs">
-                          <span className="line-clamp-1">
-                            {link.slug || link.id}
+                      <div className="flex items-center gap-2">
+                        <Link href={`/app/links/${link.id}`} className="group">
+                          <span className="text-primary line-clamp-1 font-medium transition-colors group-hover:underline">
+                            {link.title || "Link sem título"}
                           </span>
-                          <ExternalLinkIcon className="size-3" />
-                        </div>
-                      </Link>
+                        </Link>
+                        {link.isPrimary && (
+                          <Badge
+                            variant="outline"
+                            className="bg-primary/10 border-primary/20 text-primary h-5 px-2 py-0 text-xs"
+                          >
+                            Principal
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="text-muted-foreground mt-1 flex items-center gap-2 text-xs">
+                        <span className="line-clamp-1 flex items-center">
+                          /{link.slug || link.id}
+                        </span>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Link
+                                href={`/app/links/${link.id}`}
+                                className="hover:text-primary hover:bg-muted/50 rounded-sm p-0.5 transition-colors"
+                              >
+                                <ExternalLinkIcon className="size-3" />
+                              </Link>
+                            </TooltipTrigger>
+                            <TooltipContent side="bottom" className="text-xs">
+                              Ver detalhes do link
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
                     </div>
 
                     <div className="hidden flex-col justify-center text-sm lg:flex">
                       <div className="flex items-center gap-2">
                         {link.createdAt && (
-                          <span className="text-muted-foreground text-xs">
+                          <span className="text-muted-foreground flex items-center gap-1 text-xs">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="12"
+                              height="12"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              className="size-3"
+                            >
+                              <circle cx="12" cy="12" r="10" />
+                              <polyline points="12 6 12 12 16 14" />
+                            </svg>
                             Criado{" "}
                             {formatDistanceToNow(new Date(link.createdAt), {
                               locale: ptBR,
@@ -133,22 +169,79 @@ export default async function Page() {
                         )}
                       </div>
                       {link.theme && (
-                        <span className="text-muted-foreground mt-1 text-xs">
+                        <span className="text-muted-foreground mt-1 flex items-center gap-1 text-xs">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="12"
+                            height="12"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="size-3"
+                          >
+                            <circle cx="13.5" cy="6.5" r="2.5" />
+                            <circle cx="19" cy="17" r="2.5" />
+                            <circle cx="6" cy="12" r="2.5" />
+                            <line x1="14" y1="8" x2="18" y2="15" />
+                            <line x1="6" y1="14" x2="12" y2="17" />
+                            <line x1="12" y1="17" x2="13" y2="8" />
+                          </svg>
                           Tema: {link.theme || "Personalizado"}
+                        </span>
+                      )}
+
+                      {link.linkClicks !== undefined && (
+                        <span className="text-muted-foreground mt-1 flex items-center gap-1 text-xs">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="12"
+                            height="12"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="size-3"
+                          >
+                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                            <circle cx="12" cy="12" r="3" />
+                          </svg>
+                          {link.linkClicks.length || 0} visualizações
                         </span>
                       )}
                     </div>
 
                     <div className="flex items-center justify-end gap-2">
-                      <Button variant="ghost" size="sm" asChild>
-                        <Link
-                          href={`/app/links/edit/${link.id}`}
-                          className="flex items-center"
-                        >
-                          Editar Link
-                          <PencilIcon className="ml-1 size-4" />
-                        </Link>
-                      </Button>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              asChild
+                              className="h-8"
+                            >
+                              <Link
+                                href={`/app/links/edit/${link.id}`}
+                                className="flex items-center"
+                              >
+                                <PencilIcon className="size-3.5 md:mr-1" />
+                                <span className="sr-only lg:not-sr-only">
+                                  Editar Link
+                                </span>
+                              </Link>
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent side="bottom" className="text-xs">
+                            Editar informações do link
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+
                       <ThemeEditorSheet
                         linkId={link.id}
                         currentTheme={link.theme}

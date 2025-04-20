@@ -1,4 +1,5 @@
 import { incrementLinkClick } from "@/app/app/links/new/actions";
+
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {

@@ -24,7 +24,6 @@ export function NavMain({
 }: {
   items: {
     title: string;
-
     icon: LucideIcon;
     isActive?: boolean;
     items?: {
@@ -43,11 +42,7 @@ export function NavMain({
               <SidebarMenuButton
                 asChild
                 tooltip={item.title}
-                className={
-                  item.isActive
-                    ? "dark:bg-muted bg-muted-foreground/20 hover:bg-muted-foreground/30 dark:hover:bg-primary/20 dark:text-white"
-                    : ""
-                }
+                className={item.isActive ? "bg-transparent" : "bg-transparent"}
               >
                 <p>
                   <item.icon />
@@ -61,7 +56,7 @@ export function NavMain({
                       <ChevronRight
                         className={
                           item.isActive
-                            ? "hover:text-primary size-4 text-black hover:bg-transparent dark:text-white"
+                            ? "hover:text-primary hover:bg-transpare size-4 text-white"
                             : ""
                         }
                       />

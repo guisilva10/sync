@@ -1,4 +1,3 @@
-// _components/link-item.tsx
 "use client";
 
 import { Button } from "@/app/_components/ui/button";
@@ -13,7 +12,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/app/_components/ui/alert-dialog";
-import { PencilIcon, Trash2Icon } from "lucide-react";
+import { Badge } from "@/app/_components/ui/badge";
+import { PencilIcon, Trash2Icon, LinkIcon, StarIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -21,6 +21,12 @@ import { deleteLinkById, updateLinkPrimaryStatus } from "../../new/actions";
 
 import { toast } from "@/app/_components/ui/use-toast";
 import { Switch } from "@/app/_components/ui/switch";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/app/_components/ui/tooltip";
 
 interface SocialLink {
   title: string;
@@ -33,14 +39,21 @@ interface LinkItemProps {
   slug: string | null;
   description: string | null;
   socialLinksJson: SocialLink[];
-  isPrimary: boolean; // Adicione isPrimary como prop
-  userId: string; // Adicione userId para identificar o usuário
+  isPrimary: boolean;
+  userId: string;
 }
 
-export function LinkItem({ id, title, isPrimary, userId }: LinkItemProps) {
+export function LinkItem({
+  id,
+  title,
+  slug,
+  isPrimary,
+  userId,
+}: LinkItemProps) {
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
   const [isPrimaryState, setIsPrimaryState] = useState(isPrimary);
+  const displayTitle = title || "Sem título";
 
   const handleDelete = async () => {
     setIsDeleting(true);
@@ -65,23 +78,15 @@ export function LinkItem({ id, title, isPrimary, userId }: LinkItemProps) {
 
   const handleTogglePrimary = async (checked: boolean) => {
     try {
-      if (checked) {
-        await updateLinkPrimaryStatus(id, userId); // Marca como primário
-        setIsPrimaryState(true);
-        toast({
-          title: "Link ativado",
-          description: `O link "${title || "Sem título"}" agora é o ativo para compartilhar.`,
-        });
-      } else {
-        // Desativa todos os links do usuário como não primários
-        await updateLinkPrimaryStatus(id, userId); // Passa o userId para desativar todos
-        setIsPrimaryState(false);
-        toast({
-          title: "Link desativado",
-          description: `O link "${title || "Sem título"}" não é mais o ativo para compartilhar.`,
-        });
-      }
-      router.refresh(); // Atualiza a página para refletir o novo estado
+      await updateLinkPrimaryStatus(id, userId);
+      setIsPrimaryState(checked);
+      toast({
+        title: checked ? "Link ativado" : "Link desativado",
+        description: checked
+          ? `O link "${displayTitle}" agora é o ativo para compartilhar.`
+          : `O link "${displayTitle}" não é mais o ativo para compartilhar.`,
+      });
+      router.refresh();
     } catch (error) {
       console.error("Erro ao atualizar link primário:", error);
       toast({
@@ -93,39 +98,101 @@ export function LinkItem({ id, title, isPrimary, userId }: LinkItemProps) {
   };
 
   return (
-    <div className="flex items-center justify-between border-b pb-2 last:border-b-0">
-      <div className="flex items-center gap-4">
-        <Switch
-          checked={isPrimaryState}
-          onCheckedChange={handleTogglePrimary}
-          aria-label={`Ativar/desativar link "${title || "Sem título"}" como primário`}
-        />
-        <Link href={`/app/links/${id}`}>
-          <p className="font-medium">{title || "Sem título"}</p>
-        </Link>
-      </div>
-      <div className="flex space-x-2">
-        <div>
-          <Button asChild variant="ghost">
-            <Link href={`/app/links/edit/${id}`} className="flex items-center">
-              Editar
-              <PencilIcon className="ml-1 size-4" />
+    <div
+      className={`flex items-center justify-between rounded-lg p-3 transition-colors ${isPrimaryState ? "bg-background border" : "hover:bg-background/80"}`}
+    >
+      <div className="flex min-w-0 flex-1 items-center gap-3">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div>
+                <Switch
+                  checked={isPrimaryState}
+                  onCheckedChange={handleTogglePrimary}
+                  aria-label={`Ativar/desativar link "${displayTitle}" como primário`}
+                  className={`${isPrimaryState ? "data-[state=checked]:bg-primary" : ""}`}
+                />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent side="top">
+              {isPrimaryState
+                ? "Link ativo para compartilhamento"
+                : "Ativar como link principal"}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
+        <div className="flex min-w-0 flex-col">
+          <div className="flex items-center gap-2">
+            <Link
+              href={`/app/links/${id}`}
+              className="truncate font-medium hover:underline"
+            >
+              {displayTitle}
             </Link>
-          </Button>
+            {isPrimaryState && (
+              <Badge>
+                <StarIcon className="h-3 w-3" />
+                <span>Ativo</span>
+              </Badge>
+            )}
+          </div>
+
+          {slug && (
+            <div className="flex items-center gap-1 truncate text-sm text-gray-500 dark:text-gray-400">
+              <LinkIcon className="h-3 w-3" />
+              <span className="truncate">{slug}</span>
+            </div>
+          )}
         </div>
+      </div>
+
+      <div className="ml-2 flex shrink-0 space-x-2">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button asChild variant="ghost" size="sm" className="h-8 px-2">
+                <Link
+                  href={`/app/links/edit/${id}`}
+                  className="flex items-center"
+                >
+                  <PencilIcon className="size-4" />
+                  <span className="sr-only md:not-sr-only md:ml-1">Editar</span>
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="top">Editar link</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
         <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button variant="destructive" size="sm" disabled={isDeleting}>
-              Excluir
-              <Trash2Icon className="h-4 w-4" />
-            </Button>
-          </AlertDialogTrigger>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    disabled={isDeleting}
+                    className="h-8 px-2"
+                  >
+                    <Trash2Icon className="h-4 w-4" />
+                    <span className="sr-only md:not-sr-only md:ml-1">
+                      {isDeleting ? "Excluindo..." : "Excluir"}
+                    </span>
+                  </Button>
+                </AlertDialogTrigger>
+              </TooltipTrigger>
+              <TooltipContent side="top">Excluir link</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
               <AlertDialogDescription>
-                Tem certeza que deseja excluir o link &quot;
-                {title || "Sem título"}&quot;? Esta ação não pode ser desfeita.
+                Tem certeza que deseja excluir o link &quot;{displayTitle}
+                &quot;? Esta ação não pode ser desfeita.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>

@@ -16,6 +16,7 @@ import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { getLinksByUser } from "../../actions";
 import { LinkItem } from "./_components/link-item";
+import NotificationLinks from "../../(main)/_components/notification-links";
 
 export default async function Page() {
   const links = await getLinksByUser();
@@ -25,6 +26,7 @@ export default async function Page() {
       <DashboardPageHeader>
         <DashboardPageHeaderTitle>Meus Links</DashboardPageHeaderTitle>
         <DashboardPageHeaderNav>
+          <NotificationLinks />
           <Button asChild>
             <Link
               href="/app/links/new"

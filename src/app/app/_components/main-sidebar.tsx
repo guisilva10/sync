@@ -36,7 +36,6 @@ export function MainSidebar({ user }: MainSidebarProps) {
     navMain: [
       {
         title: "Dashboard",
-
         icon: LayoutDashboard,
         isActive: true,
         items: [

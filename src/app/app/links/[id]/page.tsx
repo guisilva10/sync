@@ -115,7 +115,7 @@ export default async function Page({
   return (
     <DashboardPage>
       <DashboardPageHeader>
-        <DashboardPageHeaderTitle className={themeStyles.styles.text}>
+        <DashboardPageHeaderTitle>
           Visualizando Link: {data.slug}
         </DashboardPageHeaderTitle>
       </DashboardPageHeader>

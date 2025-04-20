@@ -23,14 +23,9 @@ export function VisualizeButton({
   };
 
   return (
-    <Button
-      variant="ghost"
-      size="icon"
-      className="rounded-full"
-      onClick={handleVisualize}
-    >
-      <Eye className="h-4 w-4" />
-      <span className="sr-only">Visualizar</span>
+    <Button className="flex items-center" onClick={handleVisualize}>
+      <Eye className="size-4" />
+      <span>Visualizar</span>
     </Button>
   );
 }

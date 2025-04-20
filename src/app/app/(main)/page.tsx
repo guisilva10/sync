@@ -11,13 +11,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/app/_components/ui/card";
-import { PlusIcon, LinkIcon, ChartBarIcon, CreditCard } from "lucide-react";
+import {
+  PlusIcon,
+  LinkIcon,
+  ChartBarIcon,
+  CreditCard,
+  MousePointerClickIcon,
+} from "lucide-react";
 import { Button } from "@/app/_components/ui/button";
 import { getLinksByUser } from "../actions";
 import Link from "next/link";
 import { auth } from "@/services/auth";
 import { getUserCurrentPlan } from "@/services/stripe";
 import { LinkItem } from "../links/(main)/_components/link-item";
+import NotificationLinks from "./_components/notification-links";
 
 export default async function Page() {
   const links = await getLinksByUser();
@@ -39,7 +46,8 @@ export default async function Page() {
     <DashboardPage>
       <DashboardPageHeader>
         <DashboardPageHeaderTitle>Visão Geral</DashboardPageHeaderTitle>
-        <DashboardPageHeaderNav>
+        <DashboardPageHeaderNav className="flex items-center">
+          <NotificationLinks />
           <Button asChild>
             <Link
               href="/app/links/new"
@@ -60,7 +68,7 @@ export default async function Page() {
                 <CardTitle className="text-sm font-medium">
                   Links Criados
                 </CardTitle>
-                <LinkIcon className="text-muted-foreground h-4 w-4" />
+                <LinkIcon className="text-primary h-4 w-4" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{totalLinks}</div>
@@ -74,7 +82,7 @@ export default async function Page() {
                 <CardTitle className="text-sm font-medium">
                   Desempenho
                 </CardTitle>
-                <ChartBarIcon className="text-muted-foreground h-4 w-4" />
+                <ChartBarIcon className="text-primary h-4 w-4" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
@@ -88,7 +96,7 @@ export default async function Page() {
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Clicks</CardTitle>
-                <ChartBarIcon className="text-muted-foreground h-4 w-4" />
+                <MousePointerClickIcon className="text-primary h-4 w-4" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{totalClicks}</div>
@@ -102,7 +110,7 @@ export default async function Page() {
                 <CardTitle className="text-sm font-medium">
                   Uso do Plano atual
                 </CardTitle>
-                <CreditCard className="text-muted-foreground h-4 w-4" />
+                <CreditCard className="text-primary h-4 w-4" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">

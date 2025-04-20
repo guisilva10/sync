@@ -47,12 +47,12 @@ export default async function Page() {
           </div>
         </CardContent>
         <CardFooter className="border-border flex items-center justify-between border-t pt-6">
-          {plan.name == "Free" ? (
+          {plan.name == "free" ? (
             <span>Para ter mais limite, assine o Plano Pro</span>
           ) : (
             <span>Seu plano atual é {plan.name}</span>
           )}
-          {plan.name == "Free" ? (
+          {plan.name == "free" ? (
             <Button type="submit">Assine por R$99,90/mês</Button>
           ) : (
             <Button type="submit" variant="outline">
