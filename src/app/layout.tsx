@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Sync",
-  description: "Crie seu link in bio personalizado",
+  description: "Crie seu link in bio personalizado com a SYNC",
 };
 
 export default function RootLayout({
