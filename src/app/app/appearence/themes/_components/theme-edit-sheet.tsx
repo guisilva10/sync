@@ -195,7 +195,7 @@ export function ThemeEditorSheet({
                 plano de assinatura ativo.
               </p>
               <Button asChild>
-                <Link href="/app/plans">Ver Planos</Link>
+                <Link href="/app/billing">Ver Planos</Link>
               </Button>
             </div>
           )}
