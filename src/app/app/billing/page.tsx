@@ -53,7 +53,7 @@ export default async function Page() {
             <span>Seu plano atual é {plan.name}</span>
           )}
           {plan.name == "free" ? (
-            <Button type="submit">Assine por R$99,90/mês</Button>
+            <Button type="submit">Assine por R$19,90/mês</Button>
           ) : (
             <Button type="submit" variant="outline">
               Gerenciar Plano
