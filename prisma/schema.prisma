@@ -2,51 +2,51 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
- 
+
 generator client {
   provider = "prisma-client-js"
 }
- 
+
 model User {
-  id            String          @id @default(uuid())
-  name          String?
-  email         String          @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  links         Links[]
+  id                       String          @id @default(uuid())
+  name                     String?
+  email                    String          @unique
+  emailVerified            DateTime?
+  image                    String?
+  accounts                 Account[]
+  sessions                 Session[]
+  links                    Links[]
   stripeCustomerId         String?
   stripeSubscriptionId     String?
   stripeSubscriptionStatus String?
   stripePriceId            String?
-  Authenticator Authenticator[]
- 
+  Authenticator            Authenticator[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-
 model Links {
-  id              String    @id @default(uuid())
-  title           String?   
-  slug            String?  @unique
+  id              String      @id @default(uuid())
+  title           String?
+  slug            String?     @unique
   description     String?
-  isPrimary       Boolean @default(false)
+  isPrimary       Boolean     @default(false)
   socialLinksJson Json
   theme           String?
+  layout          String?
   image           String?
   linkClicks      LinkClick[]
   userId          String
-  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
 }
 
 model LinkClick {
   id        String   @id @default(uuid())
   linkId    String
-  url       String   // URL do link social
+  url       String // URL do link social
   clicks    Int      @default(0) // Contador de cliques
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -54,6 +54,7 @@ model LinkClick {
 
   @@unique([linkId, url]) // Garante que cada URL tenha um registro único por link
 }
+
 model Account {
   userId            String
   type              String
@@ -66,33 +67,33 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
- 
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   @@id([provider, providerAccountId])
 }
- 
+
 model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
- 
+
 model VerificationToken {
   identifier String
   token      String
   expires    DateTime
- 
+
   @@id([identifier, token])
 }
- 
+
 // Optional for WebAuthn support
 model Authenticator {
   credentialID         String  @unique
@@ -103,8 +104,8 @@ model Authenticator {
   credentialDeviceType String
   credentialBackedUp   Boolean
   transports           String?
- 
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
- 
+
   @@id([userId, credentialID])
 }
