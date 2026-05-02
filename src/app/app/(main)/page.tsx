@@ -14,17 +14,20 @@ import {
 import {
   PlusIcon,
   LinkIcon,
-  ChartBarIcon,
   CreditCard,
   MousePointerClickIcon,
+  TrophyIcon,
 } from "lucide-react";
 import { Button } from "@/app/_components/ui/button";
-import { getLinksByUser } from "../actions";
+import { getLinksByUser } from "@/features/links/presentation/actions";
 import Link from "next/link";
 import { auth } from "@/services/auth";
 import { getUserCurrentPlan } from "@/services/stripe";
 import { LinkItem } from "../links/(main)/_components/link-item";
-import NotificationLinks from "./_components/notification-links";
+import { ClicksByLinkChart } from "./_components/clicks-by-link-chart";
+import { ClicksByPlatformChart } from "./_components/clicks-by-platform-chart";
+import { TopUrlsChart } from "./_components/top-urls-chart";
+import { buildPlatformData, buildTopUrlsData } from "./_components/chart-utils";
 
 export default async function Page() {
   const links = await getLinksByUser();
@@ -33,7 +36,6 @@ export default async function Page() {
 
   const totalLinks = links.length;
 
-  // Calcula o total de cliques somando os cliques de todos os linkClicks
   const totalClicks = links.reduce((acc, link) => {
     const linkClicksSum = link.linkClicks.reduce(
       (sum, click) => sum + click.clicks,
@@ -42,12 +44,26 @@ export default async function Page() {
     return acc + linkClicksSum;
   }, 0);
 
+  // Dados para graficos
+  const clicksByLink = links
+    .map((link) => ({
+      name: link.title || link.slug || "Sem título",
+      clicks: link.linkClicks.reduce((sum, c) => sum + c.clicks, 0),
+    }))
+    .filter((d) => d.clicks > 0)
+    .sort((a, b) => b.clicks - a.clicks);
+
+  const clicksByPlatform = buildPlatformData(links);
+  const topUrls = buildTopUrlsData(links);
+
+  // Top link (mais clicado)
+  const topLink = clicksByLink.length > 0 ? clicksByLink[0] : null;
+
   return (
     <DashboardPage>
       <DashboardPageHeader>
         <DashboardPageHeaderTitle>Visão Geral</DashboardPageHeaderTitle>
         <DashboardPageHeaderNav className="flex items-center">
-          <NotificationLinks />
           <Button asChild>
             <Link
               href="/app/links/new"
@@ -61,8 +77,8 @@ export default async function Page() {
       </DashboardPageHeader>
       <DashboardPageMain className="py-6">
         <div className="space-y-6">
-          {/* Estatísticas de Links */}
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+          {/* Stat Cards */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
@@ -79,36 +95,36 @@ export default async function Page() {
             </Card>
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
-                  Desempenho
-                </CardTitle>
-                <ChartBarIcon className="text-primary h-4 w-4" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {((totalLinks / 10) * 100).toFixed(1)}%
-                </div>
-                <p className="text-muted-foreground text-xs">
-                  Progresso de criação de links
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Clicks</CardTitle>
+                <CardTitle className="text-sm font-medium">Cliques</CardTitle>
                 <MousePointerClickIcon className="text-primary h-4 w-4" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{totalClicks}</div>
                 <p className="text-muted-foreground text-xs">
-                  Total de cliques em todos os links sociais
+                  Total de cliques em todos os links
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Top Link</CardTitle>
+                <TrophyIcon className="text-primary h-4 w-4" />
+              </CardHeader>
+              <CardContent>
+                <div className="truncate text-2xl font-bold">
+                  {topLink ? topLink.name : "—"}
+                </div>
+                <p className="text-muted-foreground text-xs">
+                  {topLink
+                    ? `${topLink.clicks} cliques`
+                    : "Nenhum clique ainda"}
                 </p>
               </CardContent>
             </Card>
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">
-                  Uso do Plano atual
+                  Plano Atual
                 </CardTitle>
                 <CreditCard className="text-primary h-4 w-4" />
               </CardHeader>
@@ -117,12 +133,23 @@ export default async function Page() {
                   {plan.quota.LINKS.usage}%
                 </div>
                 <p className="text-muted-foreground text-xs">
-                  seu plano atual é{" "}
-                  <span className="text-white uppercase">{plan.name}</span>
+                  Plano{" "}
+                  <span className="font-semibold uppercase">{plan.name}</span>
                 </p>
               </CardContent>
             </Card>
           </div>
+
+          {/* Graficos */}
+          {totalClicks > 0 && (
+            <>
+              <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                <ClicksByLinkChart data={clicksByLink} />
+                <ClicksByPlatformChart data={clicksByPlatform} />
+              </div>
+              <TopUrlsChart data={topUrls} />
+            </>
+          )}
 
           {/* Lista de Links */}
           <Card>
@@ -143,13 +170,6 @@ export default async function Page() {
                       title={link.title || ""}
                       slug={link.slug}
                       description={link.description}
-                      isPrimary={link.isPrimary}
-                      userId={link.userId}
-                      socialLinksJson={
-                        typeof link.socialLinksJson === "string"
-                          ? JSON.parse(link.socialLinksJson)
-                          : []
-                      }
                     />
                   ))}
                 </div>
