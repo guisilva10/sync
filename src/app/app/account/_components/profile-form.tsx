@@ -3,8 +3,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { updateProfile } from "../actions";
-import { updateProfileSchema } from "../schema";
+import { updateProfile } from "@/features/users/presentation/actions";
+import { updateProfileSchema } from "@/features/users/application/dtos/update-profile.dto";
 
 import { z } from "zod";
 import {

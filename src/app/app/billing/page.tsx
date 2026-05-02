@@ -11,16 +11,16 @@ import { Progress } from "@/app/_components/ui/progress";
 
 import { auth } from "@/services/auth";
 import { getUserCurrentPlan } from "@/services/stripe";
-import { createCheckoutSessionAction } from "../actions";
+import { createCheckoutSessionAction } from "@/features/billing/presentation/actions";
 
 export default async function Page() {
   const session = await auth();
   const plan = await getUserCurrentPlan(session?.user.id as string);
   return (
     <form
-      action={async (formData) => {
+      action={async () => {
         "use server";
-        await createCheckoutSessionAction(formData);
+        await createCheckoutSessionAction();
       }}
     >
       <Card>

@@ -18,12 +18,6 @@ import {
   Check,
   PlusCircle,
   Trash2,
-  Instagram,
-  Twitter,
-  Youtube,
-  Facebook,
-  Linkedin,
-  Github,
   Loader2,
   PaperclipIcon,
   X,
@@ -46,13 +40,21 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/app/_components/ui/alert-dialog";
-import { updateLinkById } from "../../new/actions";
+import { updateLinkById } from "@/features/links/presentation/actions";
 import { useToast } from "@/app/_components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { uploadImage } from "@/services/supabase/actions";
+import { uploadImage } from "@/features/storage/application/use-cases/upload-image";
 import Loading from "../loading";
-import { FaWhatsapp } from "react-icons/fa";
+import {
+  FaWhatsapp,
+  FaInstagram,
+  FaTwitter,
+  FaYoutube,
+  FaFacebook,
+  FaLinkedin,
+  FaGithub,
+} from "react-icons/fa";
 
 interface SocialLink {
   id: number;
@@ -89,12 +91,12 @@ const getFullImageUrl = (imagePath: string): string => {
 };
 
 const platformIcons: Record<string, React.ReactNode> = {
-  instagram: <Instagram className="h-5 w-5" />,
-  twitter: <Twitter className="h-5 w-5" />,
-  youtube: <Youtube className="h-5 w-5" />,
-  facebook: <Facebook className="h-5 w-5" />,
-  linkedin: <Linkedin className="h-5 w-5" />,
-  github: <Github className="h-5 w-5" />,
+  instagram: <FaInstagram className="h-5 w-5" />,
+  twitter: <FaTwitter className="h-5 w-5" />,
+  youtube: <FaYoutube className="h-5 w-5" />,
+  facebook: <FaFacebook className="h-5 w-5" />,
+  linkedin: <FaLinkedin className="h-5 w-5" />,
+  github: <FaGithub className="h-5 w-5" />,
   whatsapp: <FaWhatsapp className="h-5 w-5" />,
   portfolio: <PaperclipIcon className="h-5 w-5" />,
   other: <PaperclipIcon className="h-5 w-5" />,

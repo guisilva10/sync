@@ -14,9 +14,8 @@ import {
 import { Button } from "@/app/_components/ui/button";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
-import { getLinksByUser } from "../../actions";
+import { getLinksByUser } from "@/features/links/presentation/actions";
 import { LinkItem } from "./_components/link-item";
-import NotificationLinks from "../../(main)/_components/notification-links";
 
 export default async function Page() {
   const links = await getLinksByUser();
@@ -26,7 +25,6 @@ export default async function Page() {
       <DashboardPageHeader>
         <DashboardPageHeaderTitle>Meus Links</DashboardPageHeaderTitle>
         <DashboardPageHeaderNav>
-          <NotificationLinks />
           <Button asChild>
             <Link
               href="/app/links/new"
@@ -57,14 +55,7 @@ export default async function Page() {
                       id={link.id as string}
                       title={link.title || ""}
                       slug={link.slug}
-                      isPrimary={link.isPrimary}
-                      userId={link.userId}
                       description={link.description}
-                      socialLinksJson={
-                        typeof link.socialLinksJson === "string"
-                          ? JSON.parse(link.socialLinksJson)
-                          : []
-                      }
                     />
                   ))}
                 </div>

@@ -26,18 +26,20 @@ import {
   ExternalLink,
   PlusCircle,
   Trash2,
-  Instagram,
-  Twitter,
-  Youtube,
-  Facebook,
-  Linkedin,
-  Github,
   Globe,
   Loader2,
   PaperclipIcon,
   X,
 } from "lucide-react";
-import { FaWhatsapp } from "react-icons/fa";
+import {
+  FaWhatsapp,
+  FaInstagram,
+  FaTwitter,
+  FaYoutube,
+  FaFacebook,
+  FaLinkedin,
+  FaGithub,
+} from "react-icons/fa";
 import { useState } from "react";
 import {
   Tooltip,
@@ -56,14 +58,17 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/app/_components/ui/alert-dialog";
-import { saveLink, type LinkFormData } from "./actions";
+import {
+  saveLink,
+  type LinkFormData,
+} from "@/features/links/presentation/actions";
 import { useToast } from "@/app/_components/ui/use-toast";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 // Ajuste o caminho
 import { useSession } from "next-auth/react"; // Importação do NextAuth
-import { uploadImage } from "@/services/supabase/actions";
+import { uploadImage } from "@/features/storage/application/use-cases/upload-image";
 import Loading from "./loading";
 import { themes } from "@/app/_components/theme/constants";
 
@@ -75,12 +80,12 @@ type SocialLink = {
 };
 
 const platformIcons: Record<string, React.ReactNode> = {
-  instagram: <Instagram className="h-5 w-5" />,
-  twitter: <Twitter className="h-5 w-5" />,
-  youtube: <Youtube className="h-5 w-5" />,
-  facebook: <Facebook className="h-5 w-5" />,
-  linkedin: <Linkedin className="h-5 w-5" />,
-  github: <Github className="h-5 w-5" />,
+  instagram: <FaInstagram className="h-5 w-5" />,
+  twitter: <FaTwitter className="h-5 w-5" />,
+  youtube: <FaYoutube className="h-5 w-5" />,
+  facebook: <FaFacebook className="h-5 w-5" />,
+  linkedin: <FaLinkedin className="h-5 w-5" />,
+  github: <FaGithub className="h-5 w-5" />,
   whatsapp: <FaWhatsapp className="h-5 w-5" />,
   portfolio: <PaperclipIcon className="h-5 w-5" />,
   other: <Globe className="h-5 w-5" />,
@@ -287,7 +292,7 @@ export default function LinkInBioPage() {
         </DashboardPageHeaderTitle>
       </DashboardPageHeader>
       <DashboardPageMain className="py-6">
-        <div className="mx-auto grid w-full gap-6 lg:max-w-screen-xl lg:grid-cols-2">
+        <div className="mx-auto grid w-full gap-6 lg:max-w-7xl lg:grid-cols-2">
           {/* Formulário de edição */}
           <div className="space-y-6">
             <Card>

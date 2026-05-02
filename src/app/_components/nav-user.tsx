@@ -80,7 +80,6 @@ export function NavUser({ user }: UserDropdownProps) {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
 
-            <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <Link className="flex items-center" href="/app/account">

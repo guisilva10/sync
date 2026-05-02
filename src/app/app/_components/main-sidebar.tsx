@@ -7,12 +7,13 @@ import {
 
 import {
   CompassIcon,
+  CreditCard,
   LayoutDashboard,
-  LifeBuoy,
   Link2Icon,
   Paintbrush,
-  Projector,
-  Send,
+  PlusCircle,
+  Palette,
+  UserIcon,
 } from "lucide-react";
 
 import { Session } from "next-auth";
@@ -25,77 +26,71 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/app/_components/ui/sidebar";
-import { NavMain } from "@/app/_components/nav-main";
+import { NavMain, type NavSection } from "@/app/_components/nav-main";
 
 type MainSidebarProps = {
   user: Session["user"] | undefined;
 };
 
-export function MainSidebar({ user }: MainSidebarProps) {
-  const data = {
-    navMain: [
+const sections: NavSection[] = [
+  {
+    label: "Geral",
+    items: [
       {
         title: "Dashboard",
+        url: "/app",
         icon: LayoutDashboard,
-        isActive: true,
-        items: [
-          {
-            title: "Home",
-            url: "/app",
-          },
-        ],
       },
+    ],
+  },
+  {
+    label: "Links",
+    items: [
       {
-        title: "Links",
+        title: "Meus Links",
         url: "/app/links",
         icon: Link2Icon,
-        items: [
-          {
-            title: "Meus Links",
-            url: "/app/links",
-          },
-          {
-            title: "Adicionar Link",
-            url: "/app/links/new",
-          },
-        ],
       },
       {
-        title: "Aparência",
+        title: "Novo Link",
+        url: "/app/links/new",
+        icon: PlusCircle,
+      },
+    ],
+  },
+  {
+    label: "Aparência",
+    items: [
+      {
+        title: "Temas",
+        url: "/app/appearence/themes",
         icon: Paintbrush,
-        items: [
-          {
-            title: "Temas",
-            url: "/app/appearence/themes",
-          },
-          {
-            title: "Personalizar",
-            url: "/app/appearence/customize",
-          },
-        ],
-      },
-    ],
-    navSecondary: [
-      {
-        title: "Support",
-        url: "#",
-        icon: LifeBuoy,
       },
       {
-        title: "Feedback",
-        url: "#",
-        icon: Send,
+        title: "Personalizar",
+        url: "/app/appearence/customize",
+        icon: Palette,
       },
     ],
-    project: [
+  },
+  {
+    label: "Conta",
+    items: [
       {
-        name: "Link-1",
-        url: "#",
-        icon: Projector,
+        title: "Perfil",
+        url: "/app/account",
+        icon: UserIcon,
+      },
+      {
+        title: "Plano",
+        url: "/app/billing",
+        icon: CreditCard,
       },
     ],
-  };
+  },
+];
 
+export function MainSidebar({ user }: MainSidebarProps) {
   return (
     <Sidebar className="top-(--header-height) h-[calc(100svh-var(--header-height))]!">
       <DashboardSidebar className="top-(--header-height) h-[calc(100svh-var(--header-height))]!">
@@ -119,7 +114,7 @@ export function MainSidebar({ user }: MainSidebarProps) {
           </SidebarMenu>
         </SidebarHeader>
         <SidebarContent>
-          <NavMain items={data.navMain} />
+          <NavMain sections={sections} />
         </SidebarContent>
         <DashboardSidebarFooter>
           <NavUser user={user} />

@@ -5,6 +5,7 @@ import { ThemeProvider } from "./_components/theme/theme-provider";
 import { Toaster } from "./_components/ui/toaster";
 import { SessionProvider } from "next-auth/react";
 import { Analytics } from "@vercel/analytics/react";
+import { QueryProvider } from "./_components/providers/query-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-br">
+    <html lang="pt-br" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -37,7 +38,9 @@ export default function RootLayout({
           enableSystem
           defaultTheme="system"
         >
-          <SessionProvider>{children}</SessionProvider>
+          <QueryProvider>
+            <SessionProvider>{children}</SessionProvider>
+          </QueryProvider>
         </ThemeProvider>
         <Toaster />
         <Analytics />

@@ -1,4 +1,4 @@
-import { incrementLinkClick } from "@/app/app/links/new/actions";
+import { incrementLinkClick } from "@/features/links/presentation/actions";
 
 import { NextRequest, NextResponse } from "next/server";
 

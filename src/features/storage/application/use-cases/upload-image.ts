@@ -1,4 +1,4 @@
-import { supabase } from "./index";
+import { supabase } from "@/services/supabase";
 
 export async function uploadImage(file: File, userId: string) {
   const fileName = `${userId}-${Date.now()}-${file.name}`;
@@ -11,10 +11,8 @@ export async function uploadImage(file: File, userId: string) {
     });
 
   if (error) {
-    console.error("Erro ao fazer upload da imagem:", error.message);
-    return null;
+    throw new Error(`Erro ao fazer upload: ${error.message}`);
   }
 
-  console.log("Upload realizado com sucesso:", data);
   return data.path;
 }

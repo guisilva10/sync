@@ -20,7 +20,7 @@ import {
 
 import Link from "next/link";
 import { PlusIcon, ExternalLinkIcon, InfoIcon, PencilIcon } from "lucide-react";
-import { getLinksByUser } from "../../actions";
+import { getLinksByUser } from "@/features/links/presentation/actions";
 import { ThemeEditorSheet } from "./_components/theme-edit-sheet";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";

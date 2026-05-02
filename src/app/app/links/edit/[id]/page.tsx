@@ -6,7 +6,7 @@ import {
   DashboardPageMain,
 } from "@/app/_components/page-dashboard";
 import { EditLinkForm } from "../../(main)/_components/edit-link-sheet";
-import { getLink } from "../../new/actions";
+import { getLink } from "@/features/links/presentation/actions";
 
 export default async function EditLinkPage({
   params,

@@ -4,22 +4,12 @@
 import { Button } from "@/app/_components/ui/button";
 import { Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { updateLinkPrimaryStatus } from "../../new/actions";
 
-export function VisualizeButton({
-  linkId,
-  userId,
-  usernameSlug,
-}: {
-  linkId: string;
-  userId: string;
-  usernameSlug: string;
-}) {
+export function VisualizeButton({ slug }: { slug: string }) {
   const router = useRouter();
 
-  const handleVisualize = async () => {
-    await updateLinkPrimaryStatus(linkId, userId);
-    router.push(`/${usernameSlug}`);
+  const handleVisualize = () => {
+    router.push(`/${slug}`);
   };
 
   return (

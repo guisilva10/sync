@@ -21,7 +21,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useToast } from "@/app/_components/ui/use-toast";
-import { updateLinkTheme } from "@/app/app/links/new/actions";
+import { updateLinkTheme } from "@/features/links/presentation/actions";
 import { RadioGroup, RadioGroupItem } from "@/app/_components/ui/radio-group";
 import Link from "next/link";
 import { themes } from "@/app/_components/theme/constants";

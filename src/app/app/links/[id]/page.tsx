@@ -5,19 +5,9 @@ import {
   CardHeader,
   CardFooter,
 } from "@/app/_components/ui/card";
-import {
-  Instagram,
-  Twitter,
-  Youtube,
-  Facebook,
-  Linkedin,
-  Github,
-  Globe,
-  ArrowLeft,
-  PaperclipIcon,
-} from "lucide-react";
+import { Globe, ArrowLeft, PaperclipIcon } from "lucide-react";
 import Link from "next/link";
-import { getLinkById } from "../new/actions";
+import { getLinkById } from "@/features/links/presentation/actions";
 import {
   Avatar,
   AvatarFallback,
@@ -39,15 +29,23 @@ import {
 import { supabase } from "@/services/supabase/index";
 import { VisualizeButton } from "../(main)/_components/visualize-button";
 import { themes } from "@/app/_components/theme/constants";
-import { FaWhatsapp } from "react-icons/fa";
+import {
+  FaWhatsapp,
+  FaInstagram,
+  FaTwitter,
+  FaYoutube,
+  FaFacebook,
+  FaLinkedin,
+  FaGithub,
+} from "react-icons/fa";
 
 const platformIcons: Record<string, { icon: React.ReactNode }> = {
-  instagram: { icon: <Instagram className="h-5 w-5" /> },
-  twitter: { icon: <Twitter className="h-5 w-5" /> },
-  youtube: { icon: <Youtube className="h-5 w-5" /> },
-  facebook: { icon: <Facebook className="h-5 w-5" /> },
-  linkedin: { icon: <Linkedin className="h-5 w-5" /> },
-  github: { icon: <Github className="h-5 w-5" /> },
+  instagram: { icon: <FaInstagram className="h-5 w-5" /> },
+  twitter: { icon: <FaTwitter className="h-5 w-5" /> },
+  youtube: { icon: <FaYoutube className="h-5 w-5" /> },
+  facebook: { icon: <FaFacebook className="h-5 w-5" /> },
+  linkedin: { icon: <FaLinkedin className="h-5 w-5" /> },
+  github: { icon: <FaGithub className="h-5 w-5" /> },
   whatsapp: { icon: <FaWhatsapp className="h-5 w-5" /> },
   portfolio: { icon: <PaperclipIcon className="h-5 w-5" /> },
   other: { icon: <Globe className="h-5 w-5" /> },
@@ -109,8 +107,7 @@ export default async function Page({
     ? supabase.storage.from("images").getPublicUrl(data.image).data.publicUrl
     : null;
 
-  // Sanitiza o nome do usuário para ser usado como slug
-  const usernameSlug = data.user.name?.toLowerCase().replace(/\s+/g, "-") || "";
+  const linkSlug = data.slug || "";
 
   return (
     <DashboardPage>
@@ -152,11 +149,7 @@ export default async function Page({
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <VisualizeButton
-                      linkId={id}
-                      userId={data.userId}
-                      usernameSlug={usernameSlug}
-                    />
+                    <VisualizeButton slug={linkSlug} />
                   </TooltipTrigger>
                   <TooltipContent>
                     <p>Visualizar página</p>
@@ -200,7 +193,7 @@ export default async function Page({
               <div
                 className={`${themeStyles.styles.nameBg} inline-block ${themeStyles.styles.nameText} rounded-full px-4 py-1 text-sm font-medium`}
               >
-                @{data.user.name}
+                @{data.title}
               </div>
             </div>
             <div className="mb-8 text-center">
@@ -236,6 +229,7 @@ export default async function Page({
                         Cliques: {clickCount}
                       </p>
                       <Button
+                        asChild
                         variant="bio"
                         className={`h-12 w-full rounded-xl shadow-md transition-all duration-300 ${themeStyles.styles.buttonBg} ${themeStyles.styles.buttonText}`}
                       >
