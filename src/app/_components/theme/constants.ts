@@ -146,7 +146,7 @@ export const themes = {
       value: "dark-green",
       label: "Verde Escuro",
       styles: {
-        background: "bg-zync-950",
+        background: "bg-zinc-950",
         text: "text-white",
         mutedText: "text-muted-foreground",
         buttonBg: "bg-green-700",
@@ -160,7 +160,7 @@ export const themes = {
       value: "dark-purple",
       label: "Roxo Escuro",
       styles: {
-        background: "bg-zync-950",
+        background: "bg-zinc-950",
         text: "text-white",
         mutedText: "text-muted-foreground",
         buttonBg: "bg-purple-700",
@@ -174,7 +174,7 @@ export const themes = {
       value: "dark-red",
       label: "Vermelho Escuro",
       styles: {
-        background: "bg-zync-950",
+        background: "bg-zinc-950",
         text: "text-white",
         mutedText: "text-muted-foreground",
         buttonBg: "bg-red-700",
@@ -188,7 +188,7 @@ export const themes = {
       value: "dark-orange",
       label: "Laranja Escuro",
       styles: {
-        background: "bg-zync-950",
+        background: "bg-zinc-950",
         text: "text-white",
         mutedText: "text-muted-foreground",
         buttonBg: "bg-orange-700",
@@ -202,7 +202,7 @@ export const themes = {
       value: "dark-gray",
       label: "Cinza Escuro",
       styles: {
-        background: "bg-zync-950",
+        background: "bg-zinc-950",
         text: "text-white",
         mutedText: "text-muted-foreground",
         buttonBg: "bg-gray-700",
@@ -216,7 +216,7 @@ export const themes = {
       value: "dark-gradient-red",
       label: "Gradiente Vermelho Escuro",
       styles: {
-        background: "bg-zync-950",
+        background: "bg-zinc-950",
         text: "text-white",
         mutedText: "text-muted-foreground",
         buttonBg: "bg-gradient-to-r from-red-600 to-red-800",
@@ -230,7 +230,7 @@ export const themes = {
       value: "dark-gradient-gray",
       label: "Gradiente Cinza Escuro",
       styles: {
-        background: "bg-zync-950",
+        background: "bg-zinc-950",
         text: "text-white",
         mutedText: "text-muted-foreground",
         buttonBg: "bg-gradient-to-r from-muted to-muted/80",
