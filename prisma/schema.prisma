@@ -1,10 +1,10 @@
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+    output          = "../src/generated/prisma"
 }
 
 model User {
@@ -36,6 +36,7 @@ model Links {
   theme           String?
   layout          String?
   image           String?
+  headerImage     String?
   linkClicks      LinkClick[]
   userId          String
   user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
