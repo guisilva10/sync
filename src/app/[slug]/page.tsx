@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import type { Metadata } from "next";
 import { Card, CardContent, CardFooter } from "@/app/_components/ui/card";
 import {
   Avatar,
@@ -13,6 +14,48 @@ import { themes } from "../_components/theme/constants";
 interface SocialLink {
   title: string;
   url: string;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const linkData = await getLinkBySlug(slug);
+
+  if (!linkData) {
+    return {
+      title: "Link não encontrado | SYNC",
+      description: "Este link não existe ou foi removido.",
+    };
+  }
+
+  const title = linkData.title || slug;
+  const description =
+    linkData.description || `Confira os links de ${title} no SYNC`;
+
+  const imageUrl = linkData.image
+    ? supabase.storage.from("images").getPublicUrl(linkData.image).data
+        .publicUrl
+    : linkData.user?.image || undefined;
+
+  return {
+    title: `${title} | SYNC`,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "profile",
+      ...(imageUrl && { images: [{ url: imageUrl, width: 400, height: 400 }] }),
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description,
+      ...(imageUrl && { images: [imageUrl] }),
+    },
+  };
 }
 
 export default async function Page({
