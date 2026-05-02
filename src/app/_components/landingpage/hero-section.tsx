@@ -36,6 +36,7 @@ const HeroSection = () => {
             <Button
               size="lg"
               variant="outline"
+              asChild
               className="h-12 rounded-full px-8 text-base"
             >
               <Link href="#cta">Saiba Mais</Link>
