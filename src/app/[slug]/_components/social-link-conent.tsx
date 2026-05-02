@@ -1,22 +1,22 @@
 "use client";
 import { ReactNode } from "react";
 import { SocialLinkButton } from "./social-button"; // Ajuste o caminho
+import { Globe, PaperclipIcon } from "lucide-react";
 import {
-  Instagram,
-  Twitter,
-  Youtube,
-  Facebook,
-  Linkedin,
-  Github,
-  Globe,
-  PaperclipIcon,
-} from "lucide-react";
-import { FaWhatsapp } from "react-icons/fa";
+  FaWhatsapp,
+  FaInstagram,
+  FaTwitter,
+  FaYoutube,
+  FaFacebook,
+  FaLinkedin,
+  FaGithub,
+} from "react-icons/fa";
 
 // Tipagem das props
 interface SocialLinksClientProps {
   socialLinks: { title: string; url: string }[];
   linkId: string;
+  layout?: "default" | "grid";
   themeStyles: {
     buttonBg: string;
     buttonText: string;
@@ -25,12 +25,12 @@ interface SocialLinksClientProps {
 }
 
 const platformStyles: Record<string, { icon: ReactNode }> = {
-  instagram: { icon: <Instagram className="h-5 w-5" /> },
-  twitter: { icon: <Twitter className="h-5 w-5" /> },
-  youtube: { icon: <Youtube className="h-5 w-5" /> },
-  facebook: { icon: <Facebook className="h-5 w-5" /> },
-  linkedin: { icon: <Linkedin className="h-5 w-5" /> },
-  github: { icon: <Github className="h-5 w-5" /> },
+  instagram: { icon: <FaInstagram className="h-5 w-5" /> },
+  twitter: { icon: <FaTwitter className="h-5 w-5" /> },
+  youtube: { icon: <FaYoutube className="h-5 w-5" /> },
+  facebook: { icon: <FaFacebook className="h-5 w-5" /> },
+  linkedin: { icon: <FaLinkedin className="h-5 w-5" /> },
+  github: { icon: <FaGithub className="h-5 w-5" /> },
   whatsapp: { icon: <FaWhatsapp className="h-5 w-5" /> },
   portfolio: { icon: <PaperclipIcon className="h-5 w-5" /> },
   other: { icon: <Globe className="h-5 w-5" /> },
@@ -75,10 +75,13 @@ async function handleClick(linkId: string, url: string) {
 export function SocialLinksClient({
   socialLinks,
   linkId,
+  layout = "default",
   themeStyles,
 }: SocialLinksClientProps) {
+  const isGrid = layout === "grid";
+
   return (
-    <div className="space-y-4">
+    <div className={isGrid ? "grid grid-cols-2 gap-3" : "space-y-4"}>
       {socialLinks.length > 0 ? (
         socialLinks.map((link, index) => {
           const platform = detectPlatform(link.url);
@@ -91,13 +94,16 @@ export function SocialLinksClient({
               url={link.url}
               icon={icon}
               linkId={linkId}
+              layout={layout}
               themeStyles={themeStyles}
               onClick={handleClick}
             />
           );
         })
       ) : (
-        <div className={`text-center ${themeStyles.mutedText}`}>
+        <div
+          className={`text-center ${themeStyles.mutedText} ${isGrid ? "col-span-2" : ""}`}
+        >
           Nenhum link social disponível
         </div>
       )}

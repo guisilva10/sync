@@ -10,12 +10,13 @@ interface SocialLinkButtonProps {
   url: string;
   icon: ReactNode;
   linkId: string;
+  layout?: "default" | "grid";
   themeStyles: {
     buttonBg: string;
     buttonText: string;
     mutedText: string;
   };
-  onClick: (linkId: string, url: string) => void; // Função de clique passada como prop
+  onClick: (linkId: string, url: string) => void;
 }
 
 export function SocialLinkButton({
@@ -23,9 +24,25 @@ export function SocialLinkButton({
   url,
   icon,
   linkId,
+  layout = "default",
   themeStyles,
   onClick,
 }: SocialLinkButtonProps) {
+  if (layout === "grid") {
+    return (
+      <a
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={() => onClick(linkId, url)}
+        className={`flex flex-col items-center justify-center gap-2 rounded-xl p-4 transition-all hover:scale-105 ${themeStyles.buttonBg} ${themeStyles.buttonText}`}
+      >
+        <div className="text-2xl">{icon}</div>
+        <span className="text-center text-xs font-medium">{title}</span>
+      </a>
+    );
+  }
+
   return (
     <div className="group">
       <Button
